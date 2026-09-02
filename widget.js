@@ -15,18 +15,18 @@
     return '/article/' + encodeURIComponent(BOARD) + '/4/' + no + '/?no=' + no + '&board_no=4&spread_flag=T';
   }
 
-  /* 리뷰 탭을 실제로 눌러서 연 다음 그 위치로 스크롤.
-     그냥 #prdReview 로 점프하면 탭이 닫혀 있어 엉뚱한 데로 간다. */
+  /* 리뷰 위치로 이동.
+     ※ 탭 링크를 click() 하면 스킨 자체 핸들러가 가로채서 엉뚱한 데로 간다(실측).
+        #prdReview 는 이미 페이지에 펼쳐져 있으므로 좌표로 직접 스크롤하는 게 확실하다. */
   function gotoReview(e) {
-    if (e) e.preventDefault();
-    var tab = document.querySelector('.detail_tab a[href="#review"]') ||
-              document.querySelector('#tabProduct a[href="#prdReview"]') ||
-              document.querySelector('.tabProduct a[href="#prdReview"]');
-    if (tab) { try { tab.click(); } catch (x) { } }
-    setTimeout(function () {
-      var t = document.getElementById('prdReview') || document.querySelector('.xans-product-review');
-      if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 300);
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    var t = document.getElementById('prdReview') ||
+            document.querySelector('.xans-product-review') ||
+            document.getElementById('review');
+    if (!t) return;
+    var y = t.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 80;
+    try { window.scrollTo({ top: y, behavior: 'smooth' }); }
+    catch (x) { window.scrollTo(0, y); }
   }
 
   /* ---------- CSS ---------- */
