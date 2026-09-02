@@ -87,12 +87,15 @@
     }
   }
 
-  /* 위젯이 못 붙은 자리에 마이너스가 남으면 숨김 */
+  /* 위젯이 못 붙은 자리에 마이너스가 남으면 숨김.
+     ※ 같은 값을 반복해서 쓰면 MutationObserver 가 자기 자신을 다시 부르는 무한루프가 된다.
+        반드시 처리 표시(data-z21hid)를 남기고 한 번만 건드릴 것. */
   function killNegative() {
-    var els = document.querySelectorAll('ul.spec > li');
+    var els = document.querySelectorAll('ul.spec > li:not([data-z21hid])');
     for (var i = 0; i < els.length; i++) {
       var t = els[i].textContent || '';
       if (t.indexOf('사용후기') > -1 && /-\s*\d/.test(t) && !els[i].querySelector('.z21-rv')) {
+        els[i].setAttribute('data-z21hid', '1');
         els[i].style.display = 'none';
       }
     }
@@ -154,14 +157,33 @@
     if (hero && hero.className.indexOf('z21-hero') === -1) hero.className += ' z21-hero';
   }
 
-  function run() {
+  var observer = null, scheduled = false, runs = 0;
+
+  function paint() {
     try { injectCss(); paintCards(); killNegative(); paintDetail(); paintHero(); } catch (e) { }
   }
 
+  /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
+     추가로 프레임당 1회로 묶고, 총 실행 횟수에 상한을 둬서 어떤 경우에도 폭주하지 않게 한다. */
+  function run() {
+    if (observer) observer.disconnect();
+    paint();
+    if (observer && runs < 300) observer.observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  function schedule() {
+    if (scheduled || runs >= 300) return;
+    scheduled = true;
+    (window.requestAnimationFrame || window.setTimeout)(function () {
+      scheduled = false;
+      runs++;
+      run();
+    }, 60);
+  }
+
+  if (window.MutationObserver) observer = new MutationObserver(schedule);
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
-  if (window.MutationObserver) {
-    new MutationObserver(function () { run(); })
-      .observe(document.documentElement, { childList: true, subtree: true });
-  }
+  window.addEventListener('load', schedule);
 })();
