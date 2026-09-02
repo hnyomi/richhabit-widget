@@ -19,14 +19,23 @@
      ※ 탭 링크를 click() 하면 스킨 자체 핸들러가 가로채서 엉뚱한 데로 간다(실측).
         #prdReview 는 이미 페이지에 펼쳐져 있으므로 좌표로 직접 스크롤하는 게 확실하다. */
   function gotoReview(e) {
-    if (e) { e.preventDefault(); e.stopPropagation(); }
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+    }
     var t = document.getElementById('prdReview') ||
             document.querySelector('.xans-product-review') ||
             document.getElementById('review');
     if (!t) return;
-    var y = t.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 80;
-    try { window.scrollTo({ top: y, behavior: 'smooth' }); }
-    catch (x) { window.scrollTo(0, y); }
+    function jump() {
+      var y = t.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 80;
+      window.scrollTo(0, y);
+    }
+    /* 스킨의 앵커 핸들러가 뒤늦게 스크롤을 되돌리는 일이 있어 한 번 더 확정한다 */
+    jump();
+    setTimeout(jump, 120);
+    setTimeout(jump, 400);
   }
 
   /* ---------- CSS ---------- */
@@ -46,9 +55,9 @@
     '.z21-sum .z21-stars{font-size:17px;letter-spacing:2px}',
     '.z21-sum__score{font-size:18px;font-weight:700;color:#1d1d1d;line-height:1}',
     '.z21-sum__cnt{font-size:13px;color:#6d6d6d}',
-    '.z21-sum__link{margin-left:auto;font-size:13px;color:#8a6d3b;text-decoration:underline;white-space:nowrap}',
+    '.z21-sum__link{margin-left:auto;font-size:13px;color:#8a6d3b;text-decoration:underline;white-space:nowrap;cursor:pointer}',
     '.z21-sum__pics{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:12px}',
-    '.z21-sum__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:6px;background:#efeae3}',
+    '.z21-sum__pics > *{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:6px;background:#efeae3;cursor:pointer}',
     '.z21-sum__pics img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}',
 
     /* 리뷰 영역 포토 갤러리 */
@@ -158,20 +167,25 @@
     h += '<span class="z21-sum__cnt">구매자 리뷰 ' + num(d.cnt) + '개';
     if (d.photo) h += ' · 포토 ' + num(d.photo) + '장';
     h += '</span>';
-    h += '<a href="#prdReview" class="z21-sum__link">리뷰 전체보기 &rsaquo;</a></div>';
+    /* ※ <a href="#..."> 로 두면 스킨의 앵커 핸들러가 가로채 엉뚱한 데로 간다.
+          앵커를 쓰지 않고 span 에 클릭만 붙인다. */
+    h += '<span class="z21-sum__link z21-jump" role="button" tabindex="0">리뷰 전체보기 &rsaquo;</span></div>';
     if (d.pics && d.pics.length) {
       h += '<div class="z21-sum__pics">';
       for (var i = 0; i < Math.min(6, d.pics.length); i++) {
-        h += '<a href="#prdReview"><img src="' + d.pics[i] + '" alt="구매자 포토리뷰" loading="lazy"></a>';
+        h += '<span class="z21-jump" role="button" tabindex="0"><img src="' + d.pics[i] + '" alt="구매자 포토리뷰" loading="lazy"></span>';
       }
       h += '</div>';
     }
     box.innerHTML = h;
     head.parentNode.insertBefore(box, head.nextSibling);
 
-    var links = box.querySelectorAll('a[href="#prdReview"]');
+    var links = box.querySelectorAll('.z21-jump');
     for (var k = 0; k < links.length; k++) {
       links[k].addEventListener('click', gotoReview);
+      links[k].addEventListener('keydown', function (ev) {
+        if (ev.key === 'Enter' || ev.key === ' ') gotoReview(ev);
+      });
     }
   }
 
