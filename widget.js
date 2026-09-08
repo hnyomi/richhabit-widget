@@ -104,6 +104,13 @@
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
+    /* BEST PICK 별점 줄 */
+    '.z21-pickrv{display:flex;align-items:center;gap:6px;margin:6px 0 2px}',
+    '.z21-pickrv .z21-stars{font-size:14px;letter-spacing:1px}',
+    '.z21-pickrv b{font-size:13px;font-weight:700;color:#222}',
+    '.z21-pickrv span{font-size:12px;color:#8a8a8a}',
+    '.z21-pickrv em{font-size:11px;color:#b08d57;font-style:normal}',
+
     /* 빈 카테고리 안내 */
     '.z21-empty{max-width:640px;margin:60px auto;padding:44px 28px;text-align:center;',
     'border:1px solid #ece7e0;border-radius:14px;background:#fbf9f6}',
@@ -403,6 +410,19 @@
       if (dc) dc.textContent = p.desc;
       var mo = cell.querySelector('.main_banner_more, .main_banner_more a');
       if (mo) mo.textContent = '자세히 보기';
+
+      /* BEST PICK 은 상품카드가 아니라 배너라서 별점이 자동으로 안 붙는다.
+         BEST SELLER/NEW ARRIVALS 를 지우면서 메인에서 리뷰가 통째로 사라졌으므로 여기 직접 넣는다. */
+      var rv = RV[String(p.no)];
+      if (rv && rv.cnt && nm && !cell.querySelector('.z21-pickrv')) {
+        var line = document.createElement('div');
+        line.className = 'z21-pickrv';
+        line.innerHTML = stars(rv.avg) +
+          '<b>' + rv.avg.toFixed(1) + '</b>' +
+          '<span>리뷰 ' + num(rv.cnt) + '</span>' +
+          (rv.photo ? '<em>포토 ' + num(rv.photo) + '</em>' : '');
+        nm.parentNode.insertBefore(line, nm.nextSibling);
+      }
       var links = cell.querySelectorAll('a');
       for (var k = 0; k < links.length; k++) links[k].setAttribute('href', url('/product/detail.html?product_no=' + p.no));
     }
