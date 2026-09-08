@@ -459,8 +459,10 @@
       { n: '2권', l: '출간한 책' },
       { n: '20만+', l: '함께하는 사람들' }
     ],
-    cta: '리치파카 이야기 더 보기',
-    href: 'https://blog.naver.com/duswn3174'
+    /* 몰 밖(블로그)으로 내보내면 이탈한다. 몰 안 회사소개 페이지로 보낸다.
+       그 페이지에 About/우리의 시작/Vision/대표 인사말이 이미 다 있다. */
+    cta: '브랜드 이야기 더 보기',
+    href: '/shopinfo/company.html'
   };
 
   function dressStory() {
