@@ -532,7 +532,7 @@
        회사소개는 헤더가 라이브 스킨이라 톤이 끊기고, 내용도 브랜드 스토리로는 약하다.
        블로그는 몰 밖이지만 리치파카 본인 콘텐츠라 스토리 CTA로는 이쪽이 낫다. */
     cta: '리치파카 이야기 더 보기',
-    href: 'https://blog.naver.com/duswn3174'
+    href: 'https://link.inpock.co.kr/richpaca'   /* 리치파카 요청: 인포크 링크로 (2026-09-08) */
   };
 
   function dressStory() {
