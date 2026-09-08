@@ -616,7 +616,10 @@
 
   if (window.MutationObserver) observer = new MutationObserver(schedule);
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
-  else run();
+  /* 카페24 스크립트태그는 body 맨 끝(99% 지점)에 실린다. 히어로는 이미 파싱돼 있으므로
+     DOMContentLoaded 를 기다릴 이유가 없다 — 기다리면 화장품 샘플이 그만큼 더 오래 보인다.
+     그래서 즉시 한 번 돌리고, 이후 DOMContentLoaded/load 에서 한 번 더 확인한다. */
+  run();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule);
   window.addEventListener('load', schedule);
 })();
