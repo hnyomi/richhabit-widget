@@ -106,12 +106,12 @@
 
     /* BEST SELLER — 5개 한 줄, 사진과 글씨 사이 여백 넉넉히 */
     '.main_product_category{padding-top:72px;padding-bottom:72px}',
-    '.main_product_category .prdList{display:grid !important;grid-template-columns:repeat(5,1fr);gap:26px;float:none}',
-    '.main_product_category .prdList>li{width:auto !important;margin:0 !important;float:none !important}',
-    '.main_product_category .prdList .thumbnail{margin-bottom:18px}',
-    '.main_product_category .prdList .description{padding-top:4px}',
-    '.main_product_category .prdList .name{margin-bottom:10px;line-height:1.5}',
-    '.main_product_category .prdList ul.spec{margin-top:8px}',
+    '.main_product_category .z21-grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:26px;float:none}',
+    '.main_product_category .z21-grid5>li{width:auto !important;margin:0 !important;float:none !important}',
+    '.main_product_category .z21-grid5 .thumbnail{margin-bottom:18px}',
+    '.main_product_category .z21-grid5 .description{padding-top:4px}',
+    '.main_product_category .z21-grid5 .name{margin-bottom:10px;line-height:1.5}',
+    '.main_product_category .z21-grid5 ul.spec{margin-top:8px}',
     '.main_product_category .main_title{margin-bottom:44px}',
 
     /* BEST PICK 별점 줄 */
@@ -179,7 +179,7 @@
     '.z21-tr .z21-stars.big{font-size:20px}',
     '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
     '.main_product_category{padding-top:44px;padding-bottom:44px}',
-    '.main_product_category .prdList{grid-template-columns:repeat(2,1fr);gap:16px}',
+    '.main_product_category .z21-grid5{grid-template-columns:repeat(2,1fr);gap:16px}',
     '.main_product_category .main_title{margin-bottom:28px}',
     '.z21-empty{margin:36px 16px;padding:32px 20px}',
     '.z21-st{padding:52px 0}',
@@ -570,23 +570,25 @@
 
   function addMissing(sec) {
     if (sec.querySelector('#anchorBoxId_' + MISSING.no)) return;   /* 이미 있으면 안 넣는다 */
-    var cards = sec.querySelectorAll('li[id^="anchorBoxId_"]');
+    var first = sec.querySelector('.z21-grid5');
+    var cards = (first || sec).querySelectorAll('li[id^="anchorBoxId_"]');
     if (!cards.length) return;
-    var ul = cards[0].parentNode;
+    var ul = sec.querySelector('.z21-grid5') || cards[0].parentNode;
     var cell = cards[0].cloneNode(true);
     cell.id = 'anchorBoxId_' + MISSING.no;
     cell.removeAttribute('data-z21');
 
-    var im = cell.querySelector('img');
-    if (im) { im.removeAttribute('srcset'); im.setAttribute('src', MISSING.img); im.setAttribute('alt', MISSING.name); }
+    /* <source> 를 먼저 지워야 한다. 나중에 지우면 이미 그 이미지로 확정돼 src 가 안 먹는다. */
     var srcs = cell.querySelectorAll('source');
     for (var s2 = 0; s2 < srcs.length; s2++) srcs[s2].parentNode.removeChild(srcs[s2]);
+    var im = cell.querySelector('img');
+    if (im) { im.removeAttribute('srcset'); im.setAttribute('src', MISSING.img); im.setAttribute('alt', MISSING.name); im.removeAttribute('id'); }
 
     var links = cell.querySelectorAll('a');
     for (var k = 0; k < links.length; k++) links[k].setAttribute('href', url('/product/detail.html?product_no=' + MISSING.no));
 
-    var nm = cell.querySelector('.name a span:last-child, .name span:last-child');
-    if (nm) nm.textContent = MISSING.name;
+    var spans = cell.querySelectorAll('.name a span, .name span');
+    if (spans.length) spans[spans.length - 1].textContent = MISSING.name;
 
     /* 가격 줄만 남기고 소비자가·요약설명 같은 나머지 줄은 지운다 (원본 카드에서 복제됐으므로) */
     var rows = cell.querySelectorAll('ul.spec > li');
@@ -612,6 +614,14 @@
     sec.setAttribute('data-z21lift', '1');
     sec.style.display = '';
     hero.parentNode.insertBefore(sec, hero.nextSibling);
+
+    /* 이 모듈은 탭마다 목록(.prdList)이 하나씩 있다. 전부에 그리드를 걸면
+       숨어 있던 탭 목록까지 펼쳐져 중복 상품이 쏟아진다(실측). 첫 목록만 쓰고 나머지는 숨긴다. */
+    var lists = sec.querySelectorAll('.prdList');
+    for (var i = 0; i < lists.length; i++) {
+      if (i === 0) { lists[i].className += ' z21-grid5'; }
+      else { lists[i].style.display = 'none'; }
+    }
     try { addMissing(sec); } catch (e) { }
   }
 
@@ -682,7 +692,8 @@
     dressStory();
     dressFloat();
     fixTabs();
-    retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
+    /* 카피는 브랜드 자기 언어에서. 회사소개 원문 "작게, 그러나 매일" 계열. */
+    retitle('.main_product_category', 'BEST SELLER', '858개의 후기가 증명한, 매일 쓰게 되는 것들');
     hide('.main_video');          /* FASHION CAMPAIGN 샘플 영상 */
     hide('.main_text');           /* OOUI HOT EVENT */
     hide('.main_map');            /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
