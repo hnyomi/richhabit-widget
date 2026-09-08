@@ -554,8 +554,12 @@
     var kids = host.children;
     for (var k = 0; k < kids.length; k++) {
       if (kids[k] === box) continue;
+      var c = (kids[k].className || '').toString();
       var t = (kids[k].textContent || '');
-      if (t.indexOf('회사소개 정보') > -1 || (t.indexOf('상점명') > -1 && t.indexOf('사업자등록번호') > -1)) {
+      /* 정보표 + "현재 위치 홈 > 회사소개" 경로 + "회사소개" 제목까지 전부 뺀다(대표 지시).
+         About 섹션이 자기 헤드라인을 갖고 있어서 위에 회사소개 제목이 겹쳐 보인다. */
+      if (c.indexOf('titleArea') > -1 || c.indexOf('path') > -1 ||
+          t.indexOf('회사소개 정보') > -1 || (t.indexOf('상점명') > -1 && t.indexOf('사업자등록번호') > -1)) {
         kids[k].style.display = 'none';
       }
     }
