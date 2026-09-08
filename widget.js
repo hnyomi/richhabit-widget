@@ -641,8 +641,12 @@
         danger[d].removeAttribute('onclick');
       }
     }
-    var badge = cell.querySelector('.icon, .badge');
-    if (badge) badge.innerHTML = '';
+    /* BEST 같은 진열 아이콘은 원본(독서대) 것이다. innerHTML 비우기로는 카페24 JS가 다시 그린다.
+       요소 자체를 지운다. 이 상품이 실제 BEST인지는 판매자가 상품설정에서 정할 일이다. */
+    var icons = cell.querySelectorAll('.icon, .badge');
+    for (var b = 0; b < icons.length; b++) {
+      if (icons[b].parentNode) icons[b].parentNode.removeChild(icons[b]);
+    }
     ul.appendChild(cell);
   }
 
