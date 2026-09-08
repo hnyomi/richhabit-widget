@@ -274,7 +274,14 @@
     ]
   };
 
-  function isOui() { return !!document.querySelector('.main_image_text_gallery'); }
+  /* 🚨 오우이 판별은 반드시 두 조건을 모두 봐야 한다.
+     현재 라이브 스킨(skin15)에도 .main_image_text_gallery / .main_text 가 있어서
+     이것만 보고 판단하면 라이브 메인의 섹션을 숨겨버린다 (2026-09-08 실제 사고).
+     .main_product_category(BEST SELLER 4탭)는 오우이에만 있다 — 라이브 0건, 오우이 1건. */
+  function isOui() {
+    return !!document.querySelector('.main_product_category') &&
+           !!document.querySelector('.main_image_text_gallery');
+  }
 
   function hide(sel) {
     var els = document.querySelectorAll(sel);
