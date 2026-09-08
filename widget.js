@@ -597,11 +597,19 @@
     for (var r = rows.length - 1; r >= 0; r--) {
       var t = rows[r].textContent || '';
       if (t.indexOf('판매가') > -1) {
-        var sp = rows[r].querySelectorAll('span'), val = null;
+        /* 라벨(<strong>) 밖 span 이 여러 개다(판매가·소비자가). 첫 개만 값으로 쓰고 나머지는 지운다.
+           안 그러면 "39,800원3,900원" 처럼 두 값이 겹쳐 보인다(실측). */
+        var sp = rows[r].querySelectorAll('span'), outs = [];
         for (var q = 0; q < sp.length; q++) {
-          if (!(sp[q].closest && sp[q].closest('strong'))) val = sp[q];
+          if (!(sp[q].closest && sp[q].closest('strong'))) outs.push(sp[q]);
         }
-        if (val) val.textContent = MISSING.price;
+        if (outs.length) {
+          outs[0].textContent = MISSING.price;
+          outs[0].style.textDecoration = 'none';
+          for (var e2 = 1; e2 < outs.length; e2++) {
+            if (outs[e2].parentNode) outs[e2].parentNode.removeChild(outs[e2]);
+          }
+        }
       } else {
         rows[r].parentNode.removeChild(rows[r]);
       }
@@ -620,6 +628,19 @@
       spec.appendChild(li);
     }
     cell.setAttribute('data-z21', '1');   /* paintCards 가 다시 건드리지 않게 */
+    /* 🚨 복제 카드의 장바구니/옵션 버튼은 원본 상품번호가 박혀 있다.
+       그대로 두면 떡메모지 카드에서 장바구니를 눌렀을 때 독서대(46)가 담긴다(실측).
+       상세페이지 링크만 남기고 실행 버튼은 전부 제거한다. */
+    var danger = cell.querySelectorAll('[onclick]');
+    for (var d = 0; d < danger.length; d++) {
+      var oc = danger[d].getAttribute('onclick') || '';
+      if (/add_basket|add_wish|direct_buy|option/i.test(oc)) {
+        var box = danger[d].closest ? (danger[d].closest('.icon__box') || danger[d].closest('.prdList__btn') || danger[d]) : danger[d];
+        if (box && box.parentNode) box.parentNode.removeChild(box);
+      } else {
+        danger[d].removeAttribute('onclick');
+      }
+    }
     var badge = cell.querySelector('.icon, .badge');
     if (badge) badge.innerHTML = '';
     ul.appendChild(cell);
