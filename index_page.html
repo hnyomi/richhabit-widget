@@ -1,0 +1,127 @@
+<!--@layout(/layout/basic/layout.html)-->
+<!--@js(/layout/basic/js/main.js)-->
+<!--@css(/layout/basic/css/main.css)-->
+<!--@import(/smart-banner/shop1/smart-banner-admin-RES00003.html)-->
+<!-- 히어로 배경을 먼저 받게 한다. 위젯이 그리기 전에 이미지가 준비되어
+     첫 화면이 검게 비는 시간이 줄어든다(실측 0.3초 시점에 배경만 비어 있었음). -->
+<link rel="preload" as="image" fetchpriority="high" media="(min-width:768px)"
+      href="https://file.cafe24cos.com/banner-admin-live/upload/richhabit/87b75b0c-bbef-4283-92fc-ad34e30de16d.png">
+<link rel="preload" as="image" fetchpriority="high" media="(max-width:767px)"
+      href="https://file.cafe24cos.com/banner-admin-live/upload/richhabit/4f2f109d-ff23-495f-afee-a25ea047d2aa.png">
+<section class="section main_product_category" data-ez-module="product-list-category/2" data-ez-layout="grid4" data-ez="contents-1amiur6-1">
+	<ez-prop data-version="1.0.0" type="layout">
+		<ez-var data-prop="layout" data-namespace="ez.module.product-list-category.layout" data-type="array">
+			<ez-item data-id="grid3" data-name="일반3단형(PC 3열/MOBILE 2열)"></ez-item>
+			<ez-item data-id="grid4" data-name="일반4단형(PC 4열/MOBILE 2열)"></ez-item>
+			<ez-item data-id="grid5" data-name="일반5단형(PC 5열/MOBILE 3열)"></ez-item>
+			<ez-item data-id="grid3 list_gallery" data-name="이미지강조3단형(PC 3열/MOBILE 2열)"></ez-item>
+			<ez-item data-id="grid4 list_gallery" data-name="이미지강조4단형(PC 4열/MOBILE 2열)"></ez-item>
+			<ez-item data-id="grid5 list_gallery" data-name="이미지강조5단형(PC 5열/MOBILE 3열)"></ez-item>
+		</ez-var>
+	</ez-prop>
+	<div class="main_product_inner">
+		<div class="main_title ez-align-center" data-ez-role="ez-align" data-ez-align="center"><!-- 메인 베스트셀러 수정하는곳 -->
+			<div class="main_title_txt01" data-ez-role="title">BEST! SELLER</div>
+			<div class="main_title_txt02" data-ez-role="subtitle">베스트 셀러를 만나보세요</div>
+		</div><!-- //main_title -->
+
+		<ul class="main_product_tab" data-ez-role="tab-list">
+			<li data-ez-role="tab-item"><button type="button" class="button" data-id="tabContent1" data-ez-role="name" data-name="새로운 카테고리">새로운 카테고리</button></li>
+			<li data-ez-role="tab-item"><button type="button" class="button" data-id="tabContent2" data-ez-role="name" data-name="새로운 카테고리">새로운 카테고리</button></li>
+			<li data-ez-role="tab-item"><button type="button" class="button" data-id="tabContent3" data-ez-role="name" data-name="새로운 카테고리">새로운 카테고리</button></li>
+			<li data-ez-role="tab-item"><button type="button" class="button" data-id="tabContent4" data-ez-role="name" data-name="새로운 카테고리">새로운 카테고리</button></li>
+		</ul><!-- //main_product_tab -->
+	</div><!-- //main_product_inner -->
+
+	<div class="content_list" data-ez-role="content-list">
+		<div class="tabcontent" id="tabContent1" data-ez-role="content-item">
+			<div data-ez-holder="product_listmain">
+				<div module="product_listmain_1" class="ec-base-product">
+					<!--
+						$count = 100
+						$basket_result = /product/add_basket.html
+						$basket_option = /product/basket_option.html
+						$moreview = yes
+						$cache = yes
+					-->
+					<ul class="prdList grid4" data-ez-role="layout ez-discount-tag">
+						<!--@import(/product/list_product.html)-->
+					</ul>
+				</div>
+				<div module="product_listmore_1" class="more">
+					<a href="#none" onclick="{$more_action}" class="btnMore">
+						상품 더보기<div>(<span id="more_current_page_{$display_group}">{$current_page}</span>/<span id="more_total_page_{$display_group}">{$total_page}</span>)</div>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="tabcontent" id="tabContent2" data-ez-role="content-item">
+			<div data-ez-holder="product_listmain">
+				<div module="product_listmain_2" class="ec-base-product">
+					<!--
+						$count = 100
+						$basket_result = /product/add_basket.html
+						$basket_option = /product/basket_option.html
+						$moreview = yes
+						$cache = yes
+					-->
+					<ul class="prdList grid4" data-ez-role="layout ez-discount-tag">
+						<!--@import(/product/list_product.html)-->
+					</ul>
+				</div>
+				<div module="product_listmore_2" class="more">
+					<a href="#none" onclick="{$more_action}" class="btnMore">
+						상품 더보기<div>(<span id="more_current_page_{$display_group}">{$current_page}</span>/<span id="more_total_page_{$display_group}">{$total_page}</span>)</div>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="tabcontent" id="tabContent3" data-ez-role="content-item">
+			<div data-ez-holder="product_listmain">
+				<div module="product_listmain_3" class="ec-base-product">
+					<!--
+						$count = 100
+						$basket_result = /product/add_basket.html
+						$basket_option = /product/basket_option.html
+						$moreview = yes
+						$cache = yes
+					-->
+					<ul class="prdList grid4" data-ez-role="layout ez-discount-tag">
+						<!--@import(/product/list_product.html)-->
+					</ul>
+				</div>
+				<div module="product_listmore_3" class="more">
+					<a href="#none" onclick="{$more_action}" class="btnMore">
+						상품 더보기<div>(<span id="more_current_page_{$display_group}">{$current_page}</span>/<span id="more_total_page_{$display_group}">{$total_page}</span>)</div>
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="tabcontent" id="tabContent4" data-ez-role="content-item">
+			<div data-ez-holder="product_listmain">
+				<div module="product_listmain_4" class="ec-base-product">
+					<!--
+						$count = 100
+						$basket_result = /product/add_basket.html
+						$basket_option = /product/basket_option.html
+						$moreview = yes
+						$cache = yes
+					-->
+					<ul class="prdList grid4" data-ez-role="layout ez-discount-tag">
+						<!--@import(/product/list_product.html)-->
+					</ul>
+				</div>
+				<div module="product_listmore_4" class="more">
+					<a href="#none" onclick="{$more_action}" class="btnMore">
+						상품 더보기<div>(<span id="more_current_page_{$display_group}">{$current_page}</span>/<span id="more_total_page_{$display_group}">{$total_page}</span>)</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div><!-- //content-list -->
+</section>
+<!--@define(cmc_log)-->
+<!--#ez="1/16"-->
