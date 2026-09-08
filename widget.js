@@ -95,6 +95,14 @@
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
+    /* 빈 카테고리 안내 */
+    '.z21-empty{max-width:640px;margin:60px auto;padding:44px 28px;text-align:center;',
+    'border:1px solid #ece7e0;border-radius:14px;background:#fbf9f6}',
+    '.z21-empty strong{display:block;font-size:20px;font-weight:700;color:#1d1d1d;margin-bottom:12px}',
+    '.z21-empty p{font-size:14px;line-height:1.7;color:#6d6d6d;margin:0 0 24px}',
+    '.z21-empty a{display:inline-block;padding:12px 26px;background:#14120f;color:#fff;',
+    'border-radius:999px;font-size:13px;font-weight:600;text-decoration:none}',
+
     /* 브랜드 스토리 섹션 */
     '.z21-st{background:#14120f;color:#fff;padding:78px 0}',
     '.z21-st__in{max-width:1230px;margin:0 auto;padding:0 20px;text-align:center}',
@@ -144,6 +152,7 @@
     '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
     '.z21-tr .z21-stars.big{font-size:20px}',
     '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
+    '.z21-empty{margin:36px 16px;padding:32px 20px}',
     '.z21-st{padding:52px 0}',
     '.z21-st__t{font-size:25px;margin-bottom:20px}',
     '.z21-st__body p{font-size:14px;line-height:1.8}',
@@ -448,7 +457,7 @@
       { n: '8년', l: '새벽 기상 지속' },
       { n: '138권', l: '9개월간 완독' },
       { n: '2권', l: '출간한 책' },
-      { n: '20만', l: '함께하는 사람들' }
+      { n: '20만+', l: '함께하는 사람들' }
     ],
     cta: '리치파카 이야기 더 보기',
     href: 'https://blog.naver.com/duswn3174'
@@ -533,6 +542,43 @@
     hide('.main_product_slide');  /* ONLY! ON — BEST SELLER와 상품이 완전히 겹친다(상품 5개뿐) */
   }
 
+  /* ---------- 2-4) 빈 카테고리 안내 ----------
+     메뉴의 「전자책」(24)·「챌린지」(25)에 상품이 0개라 누르면 빈 화면이 뜬다.
+     실제 판매는 아임웹 richpaca.com 에서 하고 있어 그쪽으로 안내한다.
+     ※ 아임웹을 접고 카페24로 통합하기로 했으므로, 상품이 등록되면 카드가 생겨
+        이 안내는 자동으로 사라진다. 통합 완료 후엔 이 블록을 지울 것.
+     ※ 스킨과 무관하게 필요한 안내라 dressOui 밖에서 돈다. */
+  var EMPTY_CATE = {
+    '24': { name: '전자책', desc: '전자책은 지금 리치파카 클래스에서 만나실 수 있습니다.' },
+    '25': { name: '챌린지', desc: '미라클모닝·독서모임 챌린지는 리치파카 클래스에서 신청하실 수 있습니다.' }
+  };
+
+  function currentCateNo() {
+    var m = /[?&]cate_no=(\d+)/.exec(location.search);
+    if (m) return m[1];
+    m = /\/category\/[^/]+\/(\d+)\//.exec(location.pathname);
+    return m ? m[1] : null;
+  }
+
+  function emptyCategoryNotice() {
+    if (document.querySelector('.z21-empty')) return;
+    var no = currentCateNo();
+    var d = EMPTY_CATE[no];
+    if (!d) return;
+    /* 상품이 하나라도 있으면 아무것도 하지 않는다 */
+    if (document.querySelectorAll('li[id^="anchorBoxId_"]').length > 0) return;
+    var host = document.getElementById('contents');
+    if (!host) return;
+
+    var box = document.createElement('div');
+    box.className = 'z21-empty';
+    box.innerHTML =
+      '<strong>' + d.name + '</strong>' +
+      '<p>' + d.desc + '</p>' +
+      '<a href="https://richpaca.com/" target="_blank" rel="noopener">리치파카 클래스 보러가기 &rsaquo;</a>';
+    host.insertBefore(box, host.firstChild);
+  }
+
   /* ---------- 3) 히어로 비네팅 ---------- */
   function paintHero() {
     if (!/^\/($|index)/.test(location.pathname)) return;
@@ -545,7 +591,7 @@
   var observer = null, scheduled = false, runs = 0;
 
   function paint() {
-    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); dressOui(); } catch (e) { }
+    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressOui(); } catch (e) { }
   }
 
   /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
