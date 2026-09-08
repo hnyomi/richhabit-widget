@@ -770,6 +770,24 @@
       else { a.removeAttribute('target'); }
     }
     for (var m = NAV.length; m < li.length; m++) li[m].style.display = 'none';  /* 남는 건 숨김 */
+
+    /* 복제본이든 원본이든, 보이는 항목은 전부 첫 항목과 같은 표시 방식으로 강제한다.
+       복제본이 list-item + width 0 으로 눌려 안 보이던 문제(실측). */
+    var vis = ul.querySelectorAll('li');
+    var base = null;
+    for (var b = 0; b < vis.length; b++) {
+      if (getComputedStyle(vis[b]).display !== 'none') { base = getComputedStyle(vis[b]); break; }
+    }
+    if (base) {
+      for (var v = 0; v < NAV.length && v < vis.length; v++) {
+        vis[v].style.display = base.display;
+        vis[v].style.width = 'auto';
+        vis[v].style.minWidth = 'auto';
+        vis[v].style.flex = '0 0 auto';
+        var a2 = vis[v].querySelector('a');
+        if (a2) { a2.style.whiteSpace = 'nowrap'; a2.style.display = 'inline-block'; }
+      }
+    }
   }
 
   /* 섹션 제목 문구 갈아끼우기 */
