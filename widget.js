@@ -320,7 +320,8 @@
     if (t1) t1.textContent = 'BEST PICK';
     if (t2) t2.textContent = '리치해빗이 가장 많이 팔린 3가지';
 
-    var cells = sec.querySelectorAll('.main_3dan_banner > *');
+    /* 셀은 .main_3dan_banner 바로 밑이 아니라 ul > li 다 (실측) */
+    var cells = sec.querySelectorAll('.main_3dan_banner ul > li');
     for (var i = 0; i < cells.length && i < OUI.picks.length; i++) {
       var p = OUI.picks[i], cell = cells[i];
       var im = cell.querySelector('img');
