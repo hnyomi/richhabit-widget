@@ -386,14 +386,37 @@
     }
   }
 
+  /* 섹션 제목 문구 갈아끼우기 */
+  function retitle(sel, t1, t2) {
+    var s = document.querySelector(sel);
+    if (!s || s.getAttribute('data-z21t') === '1') return;
+    s.setAttribute('data-z21t', '1');
+    var a = s.querySelector('.main_title_txt01'), b = s.querySelector('.main_title_txt02');
+    if (a) a.textContent = t1;
+    if (b) b.textContent = t2;
+  }
+
+  /* BEST SELLER 탭이 "새로운 카테고리" ×4 로 남아 있다.
+     실제 카테고리는 「제품」 하나뿐이고 전자책(24)·챌린지(25)는 상품 0개라 탭이 의미가 없다. */
+  function fixTabs() {
+    var tab = document.querySelector('.main_product_tab');
+    if (!tab || tab.getAttribute('data-z21tab') === '1') return;
+    tab.setAttribute('data-z21tab', '1');
+    tab.style.display = 'none';
+  }
+
   function dressOui() {
     if (!isOui()) return;
     dressHero();
     dressPicks();
     dressTrust();
-    hide('.main_video');   /* FASHION CAMPAIGN 샘플 영상 */
-    hide('.main_text');    /* OOUI HOT EVENT */
-    hide('.main_map');     /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
+    fixTabs();
+    retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
+    retitle('.main_product_list', 'ALL PRODUCTS', '습관을 만드는 도구 전체');
+    hide('.main_video');          /* FASHION CAMPAIGN 샘플 영상 */
+    hide('.main_text');           /* OOUI HOT EVENT */
+    hide('.main_map');            /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
+    hide('.main_product_slide');  /* ONLY! ON — BEST SELLER와 상품이 완전히 겹친다(상품 5개뿐) */
   }
 
   /* ---------- 3) 히어로 비네팅 ---------- */
