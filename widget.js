@@ -144,6 +144,11 @@
     'border-radius:999px;color:#fff;font-size:13px;font-weight:600;text-decoration:none}',
     '.z21-st__btn:hover{background:#fff;color:#14120f}',
 
+    /* 상단 메뉴 강제 표시 */
+    'ul[data-z21nav]>li.z21-navshow{display:inline-flex !important;width:auto !important;min-width:auto !important;flex:0 0 auto !important}',
+    'ul[data-z21nav]>li.z21-navshow>a{white-space:nowrap !important;display:inline-block !important}',
+    'ul[data-z21nav]>li.z21-navhide{display:none !important}',
+
     /* 플로팅 문의 버튼 */
     '.z21-fab{position:fixed;right:22px;bottom:22px;z-index:900;display:flex;flex-direction:column;gap:10px}',
     '.z21-fab__b{display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;',
@@ -774,24 +779,14 @@
       if (item.out) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
       else { a.removeAttribute('target'); }
     }
-    for (var m = NAV.length; m < li.length; m++) li[m].style.display = 'none';  /* 남는 건 숨김 */
 
-    /* 복제본이든 원본이든, 보이는 항목은 전부 첫 항목과 같은 표시 방식으로 강제한다.
-       복제본이 list-item + width 0 으로 눌려 안 보이던 문제(실측). */
+    /* 인라인 스타일은 스킨 CSS에 밀린다(실측: 복제본이 list-item + width 0).
+       클래스를 붙이고 !important CSS 로 강제한다. */
     var vis = ul.querySelectorAll('li');
-    var base = null;
-    for (var b = 0; b < vis.length; b++) {
-      if (getComputedStyle(vis[b]).display !== 'none') { base = getComputedStyle(vis[b]); break; }
-    }
-    if (base) {
-      for (var v = 0; v < NAV.length && v < vis.length; v++) {
-        vis[v].style.display = base.display;
-        vis[v].style.width = 'auto';
-        vis[v].style.minWidth = 'auto';
-        vis[v].style.flex = '0 0 auto';
-        var a2 = vis[v].querySelector('a');
-        if (a2) { a2.style.whiteSpace = 'nowrap'; a2.style.display = 'inline-block'; }
-      }
+    for (var v = 0; v < vis.length; v++) {
+      vis[v].className = String(vis[v].className || '').replace(/\s*z21-nav(show|hide)/g, '');
+      vis[v].className += (v < NAV.length) ? ' z21-navshow' : ' z21-navhide';
+      vis[v].style.display = '';
     }
   }
 
