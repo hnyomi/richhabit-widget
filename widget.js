@@ -374,17 +374,22 @@
     if (document.querySelector('.z21-oh')) return;
     /* 관리자에서 화장품 배너 3장을 전부 끄면 스마트배너 섹션 자체가 사라진다(실측).
        그러면 앵커가 없어 히어로가 아예 안 붙는다 → #contents 맨 앞을 대체 자리로 쓴다. */
-    var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00001"]');
+    /* 🚨 배너 영역 ID는 고정이 아니다(RES00001 -> RES00003 으로 바뀜, 실측).
+       특정 ID만 노리면 화장품 배너가 그대로 살아남는다. #contents 안의 스마트배너를 전부 잡는다.
+       ※ 화장품 문구는 이미지에 박혀 있어 텍스트 검색으로는 안 걸린다 — 눈으로 확인할 것. */
+    var banners = document.querySelectorAll('#contents [app4you-smart-banner], [app4you-smart-banner^="smart-banner-admin-"]');
+    var host = null;
+    for (var q = 0; q < banners.length; q++) {
+      if (!host) host = banners[q];
+      banners[q].style.display = 'none';
+      banners[q].setAttribute('data-z21hero', '1');
+    }
     var fallback = null;
     if (!host) {
       fallback = document.getElementById('contents') ||
                  document.querySelector('.xans-layout-main') ||
                  document.querySelector('#container');
       if (!fallback) return;
-    } else {
-      if (host.getAttribute('data-z21hero') === '1') return;
-      host.setAttribute('data-z21hero', '1');
-      host.style.display = 'none';
     }
 
     var h = OUI.hero;
