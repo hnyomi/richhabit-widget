@@ -106,7 +106,7 @@
 
     /* BEST SELLER — 5개 한 줄, 사진과 글씨 사이 여백 넉넉히 */
     '.main_product_category{padding-top:72px;padding-bottom:72px}',
-    '.main_product_category .z21-grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:26px;float:none}',
+    '.main_product_category .z21-grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:26px;float:none;align-items:start}',
     '.main_product_category .z21-grid5>li{width:auto !important;margin:0 !important;float:none !important}',
     '.main_product_category .z21-grid5 .thumbnail{margin-bottom:18px}',
     '.main_product_category .z21-grid5 .description{padding-top:4px}',
@@ -590,17 +590,36 @@
     var spans = cell.querySelectorAll('.name a span, .name span');
     if (spans.length) spans[spans.length - 1].textContent = MISSING.name;
 
-    /* 가격 줄만 남기고 소비자가·요약설명 같은 나머지 줄은 지운다 (원본 카드에서 복제됐으므로) */
+    /* 가격 줄만 남기고 나머지(소비자가·요약설명)는 지운다.
+       값 span 은 라벨(<strong>) 안이 아닌 마지막 span 이다 — 아무거나 잡으면 "3,900원 : 39,800원"이 된다. */
+    var spec = cell.querySelector('ul.spec');
     var rows = cell.querySelectorAll('ul.spec > li');
-    for (var r = 0; r < rows.length; r++) {
+    for (var r = rows.length - 1; r >= 0; r--) {
       var t = rows[r].textContent || '';
       if (t.indexOf('판매가') > -1) {
-        var v = rows[r].querySelector('span:last-child');
-        if (v) v.textContent = MISSING.price;
+        var sp = rows[r].querySelectorAll('span'), val = null;
+        for (var q = 0; q < sp.length; q++) {
+          if (!(sp[q].closest && sp[q].closest('strong'))) val = sp[q];
+        }
+        if (val) val.textContent = MISSING.price;
       } else {
         rows[r].parentNode.removeChild(rows[r]);
       }
     }
+
+    /* 별점은 paintCards 가 '사용후기' 줄을 찾아 채우는데, 복제 카드엔 그 줄이 없다. 직접 붙인다. */
+    var rv = RV[String(MISSING.no)];
+    if (spec && rv && rv.cnt) {
+      var li = document.createElement('li');
+      li.innerHTML = '<span class="z21-rv" aria-label="평점 ' + rv.avg + '점, 리뷰 ' + rv.cnt + '개">' +
+        stars(rv.avg) +
+        '<span class="z21-score">' + rv.avg.toFixed(1) + '</span>' +
+        '<em class="z21-cnt">리뷰 ' + num(rv.cnt) + '</em>' +
+        (rv.photo ? '<em class="z21-photo">포토 ' + num(rv.photo) + '</em>' : '') +
+        '</span>';
+      spec.appendChild(li);
+    }
+    cell.setAttribute('data-z21', '1');   /* paintCards 가 다시 건드리지 않게 */
     var badge = cell.querySelector('.icon, .badge');
     if (badge) badge.innerHTML = '';
     ul.appendChild(cell);
