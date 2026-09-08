@@ -537,6 +537,26 @@
     anchor.parentNode.insertBefore(box, anchor);
   }
 
+  /* 푸터 무통장 계좌정보 — 오우이 기본값이 "은행 / 0000-000-00000 / 예금주" 샘플 그대로다.
+     이대로 전환하면 손님이 입금할 계좌를 못 본다. 라이브 푸터의 실제 값으로 채운다.
+     (사업자 공개정보다. 지금도 richhabit.co.kr 푸터에 그대로 노출돼 있다) */
+  var BANK = { name: '국민은행', no: '51970101367632', owner: '강연주(리치해빗)' };
+
+  function dressBank() {
+    if (document.querySelector('[data-z21bank]')) return;
+    var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), n, hits = [];
+    while ((n = w.nextNode())) {
+      var t = (n.nodeValue || '').trim();
+      if (t === '은행' || t === '0000-000-00000' || t === '예금주') hits.push([n, t]);
+    }
+    if (!hits.length) return;
+    for (var i = 0; i < hits.length; i++) {
+      var node = hits[i][0], kind = hits[i][1];
+      node.nodeValue = kind === '은행' ? BANK.name : (kind === '예금주' ? BANK.owner : BANK.no);
+      if (node.parentNode && node.parentNode.setAttribute) node.parentNode.setAttribute('data-z21bank', '1');
+    }
+  }
+
   /* 플로팅 문의 버튼 — 기존 스킨(skin15)에 있던 카톡·뉴스레터 버튼을 오우이에도.
      원본은 이미지 버튼이었지만 여기선 CSS로 다시 그린다(레티나에서 안 뭉개지고 가볍다). */
   var FLOAT = {
@@ -812,7 +832,7 @@
   var observer = null, scheduled = false, runs = 0;
 
   function paint() {
-    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressNav(); dressOui(); } catch (e) { }
+    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressNav(); dressBank(); dressOui(); } catch (e) { }
   }
 
   /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
