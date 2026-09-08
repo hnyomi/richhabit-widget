@@ -72,7 +72,8 @@
 
     /* 오우이 교체 히어로 */
     '.z21-oh{position:relative;width:100%;height:600px;overflow:hidden;background:#1b1b1b}',
-    '.z21-oh__pic,.z21-oh__pic img{display:block;width:100%;height:100%;object-fit:cover}',
+    /* object-position 을 위쪽으로 당겨야 인물 머리가 안 잘린다 (기본 50% 50%면 잘림) */
+    '.z21-oh__pic,.z21-oh__pic img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%}',
     '.z21-oh__scrim{position:absolute;left:0;top:0;right:0;bottom:0;',
     'background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 42%,rgba(0,0,0,.12) 70%,rgba(0,0,0,.35) 100%)}',
     '.z21-oh__in{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:520px;color:#fff}',
@@ -108,6 +109,7 @@
     '.z21-gal__grid{grid-template-columns:repeat(3,1fr);gap:6px}',
     '.z21-gal__head b{font-size:15px}',
     '.z21-oh{height:auto;aspect-ratio:720/767}',
+    '.z21-oh__pic img{object-position:50% 12%}',
     '.z21-oh__in{left:6%;right:6%;max-width:none}',
     '.z21-oh__t{font-size:30px}',
     '.z21-oh__s{font-size:14px;margin-top:12px}',
