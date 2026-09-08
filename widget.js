@@ -754,39 +754,30 @@
 
     var li = ul.querySelectorAll('li');
     if (!li.length) return;
-    var tpl = li[0];
 
-    for (var n = 0; n < NAV.length; n++) {
-      var item = NAV[n], cell = li[n];
-      if (!cell) {                     /* 모자라면 첫 항목을 복제해서 채운다 */
-        cell = tpl.cloneNode(true);
-        ul.appendChild(cell);
-        /* 복제본이 스킨 CSS를 못 받아 폭 0으로 찌그러진다(실측).
-           원본의 계산된 display 를 그대로 물려준다. */
-        try {
-          var cs = window.getComputedStyle(tpl);
-          cell.style.display = cs.display;
-          cell.style.width = 'auto';
-          cell.style.flex = cs.flex;
-        } catch (x) { cell.style.display = 'flex'; cell.style.width = 'auto'; }
-      } else {
-        cell.style.display = '';
-      }
-      var a = cell.querySelector('a');
-      if (!a) continue;
-      a.textContent = item.txt;
-      a.setAttribute('href', item.out ? item.href : url(item.href));
-      if (item.out) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
-      else { a.removeAttribute('target'); }
+    /* 원본 카테고리 항목을 재사용하면 안 된다.
+       숨김 카테고리에 붙은 항목은 스킨 CSS가 폭 0으로 죽여놔서 이름만 바꿔도 안 보인다(실측).
+       첫 항목(정상 렌더)만 본으로 삼아 전부 새로 만들고, 원본은 모두 숨긴다. */
+    var tpl = li[0].cloneNode(true);
+    for (var h = 0; h < li.length; h++) {
+      li[h].className = String(li[h].className || '') + ' z21-navhide';
     }
 
-    /* 인라인 스타일은 스킨 CSS에 밀린다(실측: 복제본이 list-item + width 0).
-       클래스를 붙이고 !important CSS 로 강제한다. */
-    var vis = ul.querySelectorAll('li');
-    for (var v = 0; v < vis.length; v++) {
-      vis[v].className = String(vis[v].className || '').replace(/\s*z21-nav(show|hide)/g, '');
-      vis[v].className += (v < NAV.length) ? ' z21-navshow' : ' z21-navhide';
-      vis[v].style.display = '';
+    for (var n = 0; n < NAV.length; n++) {
+      var item = NAV[n];
+      var cell = tpl.cloneNode(true);
+      cell.className = String(cell.className || '').replace(/\s*z21-navhide/g, '') + ' z21-navshow';
+      var a = cell.querySelector('a');
+      if (!a) continue;
+      /* 링크 안에 span 등이 있으면 마지막 것에 글자를 넣는다 */
+      var sp = a.querySelectorAll('span');
+      if (sp.length) { for (var q = 0; q < sp.length; q++) sp[q].textContent = ''; sp[sp.length - 1].textContent = item.txt; }
+      else a.textContent = item.txt;
+      if (!(a.textContent || '').trim()) a.textContent = item.txt;
+      a.setAttribute('href', item.out ? item.href : url(item.href));
+      if (item.out) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      else a.removeAttribute('target');
+      ul.appendChild(cell);
     }
   }
 
