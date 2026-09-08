@@ -266,11 +266,11 @@
     },
     picks: [
       { no: 9,  name: '2026 성공플래너 다이어리', desc: '습관과 루틴을 기록하는 한 해',
-        img: 'https://richhabit.co.kr/web/product/big/202512/edeb81d6461a34ce504f71a374dc9ba6.png' },
+        img: 'https://richhabit.co.kr/web/product/medium/202512/edeb81d6461a34ce504f71a374dc9ba6.png' },
       { no: 11, name: '아웃풋 독서노트', desc: '50권의 책을 기록하는 독서 습관',
-        img: 'https://richhabit.co.kr/web/product/big/202604/191070d5151a5f0de7a8f82f09d3b6ea.jpg' },
+        img: 'https://richhabit.co.kr/web/product/medium/202604/191070d5151a5f0de7a8f82f09d3b6ea.jpg' },
       { no: 46, name: '360도 회전 아크릴 독서대', desc: '높이까지 맞추는 몰입 독서 환경',
-        img: 'https://richhabit.co.kr/web/product/big/202509/f259287b6cdeab5c1b56caac968fa09b.jpeg' }
+        img: 'https://richhabit.co.kr/web/product/medium/202509/f259287b6cdeab5c1b56caac968fa09b.jpeg' }
     ]
   };
 
