@@ -471,15 +471,20 @@
     box.innerHTML = h;
     host.parentNode.insertBefore(box, host.nextSibling);
 
-    /* 포토 스트립은 외부 CDN(네이버)이라 막히는 환경이 있다.
-       4초 안에 한 장도 못 뜨면 빈 칸을 보여주느니 그 줄만 숨긴다. */
+    /* 포토 스트립 안전망.
+       ⚠️ 시간 재서 "아직 안 떴으면 숨김"으로 하면 안 된다. 화면 아래에 있어 아직 요청도 안 한
+          lazy 이미지를 실패로 오해해 숨겨버리고, 숨겨지면 영영 안 불러온다(실측 사고).
+       실제로 error 가 난 개수만 세서, 절반 이상 깨졌을 때만 줄을 숨긴다. */
     var strip = box.querySelector('.z21-tr__pics');
     if (strip) {
-      setTimeout(function () {
-        var im = strip.querySelectorAll('img'), ok = 0;
-        for (var i = 0; i < im.length; i++) if (im[i].complete && im[i].naturalWidth > 0) ok++;
-        if (ok === 0) strip.style.display = 'none';
-      }, 4000);
+      var imgs = strip.querySelectorAll('img'), failed = 0;
+      for (var i = 0; i < imgs.length; i++) {
+        imgs[i].removeAttribute('loading');   /* 눈에 보이는 신뢰 지표라 미루지 않는다 */
+        imgs[i].addEventListener('error', function () {
+          failed++;
+          if (failed >= Math.ceil(imgs.length / 2)) strip.style.display = 'none';
+        });
+      }
     }
   }
 
