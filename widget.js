@@ -674,13 +674,26 @@
     { txt: '클래스',  href: 'https://richpaca.com/', out: true }
   ];
 
-  function dressNav() {
-    var probe = null, links = document.querySelectorAll('a');
-    for (var i = 0; i < links.length; i++) {
-      if ((links[i].textContent || '').trim() === '제품') { probe = links[i]; break; }
+  /* ※ 이 함수는 dressOui 밖에서 돈다.
+     메인에만 있는 조건(.main_product_category 등)으로 묶어두면 상품목록·게시판 페이지에서
+     메뉴가 안 바뀌어 "위 카테고리가 메인하고 다르게 뜬다"는 문제가 생긴다(실측).
+     오우이 기본 메뉴는 제품·전자책·챌린지 세 개다. 라이브 스킨엔 이 조합이 없으므로 판별자로 안전하다. */
+  function findOuiNav() {
+    var uls = document.querySelectorAll('ul');
+    for (var i = 0; i < uls.length; i++) {
+      var txt = { 제품: 0, 전자책: 0, 챌린지: 0 };
+      var as = uls[i].querySelectorAll(':scope > li > a, :scope > li a');
+      for (var j = 0; j < as.length; j++) {
+        var t = (as[j].textContent || '').trim();
+        if (txt.hasOwnProperty(t)) txt[t]++;
+      }
+      if (txt['제품'] && txt['전자책'] && txt['챌린지']) return uls[i];
     }
-    if (!probe) return;
-    var ul = probe.closest ? probe.closest('ul') : null;
+    return null;
+  }
+
+  function dressNav() {
+    var ul = document.querySelector('ul[data-z21nav]') || findOuiNav();
     if (!ul || ul.getAttribute('data-z21nav') === '1') return;
     ul.setAttribute('data-z21nav', '1');
 
@@ -727,7 +740,6 @@
   function dressOui() {
     if (!isOui()) return;
     dressHero();
-    dressNav();
     dressTrust();
     dressStory();
     dressFloat();
@@ -796,7 +808,7 @@
   var observer = null, scheduled = false, runs = 0;
 
   function paint() {
-    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressOui(); } catch (e) { }
+    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressNav(); dressOui(); } catch (e) { }
   }
 
   /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
