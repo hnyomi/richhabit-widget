@@ -326,11 +326,16 @@
       var p = OUI.picks[i], cell = cells[i];
       var im = cell.querySelector('img');
       if (im) {
+        /* <picture><source>가 남아 있으면 내 src를 덮어쓴다 → 전부 제거 */
+        var srcs = cell.querySelectorAll('source');
+        for (var s = 0; s < srcs.length; s++) srcs[s].parentNode.removeChild(srcs[s]);
         im.removeAttribute('srcset');
-        var src = cell.querySelector('source');
-        if (src) src.setAttribute('srcset', p.img);
+        im.removeAttribute('width');
+        im.removeAttribute('height');
+        im.setAttribute('loading', 'eager');   /* 크기가 0이면 lazy가 영원히 안 불러온다 */
         im.setAttribute('src', p.img);
-        im.style.objectFit = 'cover';
+        /* 크기를 명시하지 않으면 0x0으로 접혀서 로딩 자체가 안 걸린다 (실측) */
+        im.style.cssText = 'display:block;width:100%;height:auto;aspect-ratio:396/240;object-fit:cover;';
       }
       var nm = cell.querySelector('.main_banner_txt01');
       if (nm) nm.textContent = p.name;
