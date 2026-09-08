@@ -50,7 +50,7 @@
   /* ---------- CSS ---------- */
   var CSS = [
     '.z21-rv{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}',
-    '.z21-stars{position:relative;display:inline-block;font-size:13px;line-height:1;letter-spacing:1px;color:#e2ded7;white-space:nowrap}',
+    '.z21-stars{position:relative;display:inline-block;font-size:13px;line-height:1;letter-spacing:0;color:#e8e4dd;white-space:nowrap}',
     '.z21-stars::before{content:"\\2605\\2605\\2605\\2605\\2605"}',
     '.z21-stars i{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#f0a500}',
     '.z21-stars i::before{content:"\\2605\\2605\\2605\\2605\\2605"}',
@@ -61,7 +61,7 @@
     /* 상세 상단 요약바 */
     '.z21-sum{margin:14px 0 18px;padding:14px 16px;border:1px solid #ece7e0;border-radius:10px;background:#fbf9f6}',
     '.z21-sum__head{display:flex;align-items:center;flex-wrap:wrap;gap:8px}',
-    '.z21-sum .z21-stars{font-size:17px;letter-spacing:2px}',
+    '.z21-sum .z21-stars{font-size:17px}',
     '.z21-sum__score{font-size:18px;font-weight:700;color:#1d1d1d;line-height:1}',
     '.z21-sum__cnt{font-size:13px;color:#6d6d6d}',
     '.z21-sum__link{margin-left:auto;font-size:13px;color:#8a6d3b;text-decoration:underline;white-space:nowrap;cursor:pointer}',
@@ -99,14 +99,14 @@
     '.z21-tr__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}',
     '.z21-tr__head b{font-size:26px;font-weight:700;color:#1d1d1d;line-height:1}',
     '.z21-tr__head span{font-size:14px;color:#6d6d6d}',
-    '.z21-tr .z21-stars.big{font-size:24px;letter-spacing:3px}',
+    '.z21-tr .z21-stars.big{font-size:24px}',
     '.z21-tr__pics{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:22px}',
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
     /* BEST PICK 별점 줄 */
     '.z21-pickrv{display:flex;align-items:center;gap:6px;margin:6px 0 2px}',
-    '.z21-pickrv .z21-stars{font-size:14px;letter-spacing:1px}',
+    '.z21-pickrv .z21-stars{font-size:14px}',
     '.z21-pickrv b{font-size:13px;font-weight:700;color:#222}',
     '.z21-pickrv span{font-size:12px;color:#8a8a8a}',
     '.z21-pickrv em{font-size:11px;color:#b08d57;font-style:normal}',
@@ -189,9 +189,13 @@
     (document.head || document.documentElement).appendChild(s);
   }
 
+  /* 별 아이콘은 반 칸 단위로 딱 떨어지게 그린다.
+     소수점 그대로(4.9 -> 98%) 그리면 마지막 별이 어정쩡하게 잘려 노랑·회색이 섞여 지저분하다.
+     정확한 숫자는 옆에 그대로 쓰므로 과장이 아니다. */
   function stars(avg, cls) {
-    var pct = Math.max(0, Math.min(100, avg / 5 * 100));
-    return '<span class="z21-stars' + (cls ? ' ' + cls : '') + '"><i style="width:' + pct.toFixed(1) + '%"></i></span>';
+    var half = Math.max(0, Math.min(5, Math.round(avg * 2) / 2));
+    var pct = half / 5 * 100;
+    return '<span class="z21-stars' + (cls ? ' ' + cls : '') + '"><i style="width:' + pct + '%"></i></span>';
   }
 
   function num(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
