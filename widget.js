@@ -104,6 +104,16 @@
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
+    /* BEST SELLER — 5개 한 줄, 사진과 글씨 사이 여백 넉넉히 */
+    '.main_product_category{padding-top:72px;padding-bottom:72px}',
+    '.main_product_category .prdList{display:grid !important;grid-template-columns:repeat(5,1fr);gap:26px;float:none}',
+    '.main_product_category .prdList>li{width:auto !important;margin:0 !important;float:none !important}',
+    '.main_product_category .prdList .thumbnail{margin-bottom:18px}',
+    '.main_product_category .prdList .description{padding-top:4px}',
+    '.main_product_category .prdList .name{margin-bottom:10px;line-height:1.5}',
+    '.main_product_category .prdList ul.spec{margin-top:8px}',
+    '.main_product_category .main_title{margin-bottom:44px}',
+
     /* BEST PICK 별점 줄 */
     '.z21-pickrv{display:flex;align-items:center;gap:6px;margin:6px 0 2px}',
     '.z21-pickrv .z21-stars{font-size:14px}',
@@ -168,6 +178,9 @@
     '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
     '.z21-tr .z21-stars.big{font-size:20px}',
     '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
+    '.main_product_category{padding-top:44px;padding-bottom:44px}',
+    '.main_product_category .prdList{grid-template-columns:repeat(2,1fr);gap:16px}',
+    '.main_product_category .main_title{margin-bottom:28px}',
     '.z21-empty{margin:36px 16px;padding:32px 20px}',
     '.z21-st{padding:52px 0}',
     '.z21-st__t{font-size:25px;margin-bottom:20px}',
@@ -547,6 +560,50 @@
 
   /* BEST SELLER 를 히어로 바로 아래로 끌어올린다.
      이게 진짜 상품카드라 별점·리뷰수·가격·할인율이 자동으로 붙는다(배너로는 안 된다). */
+  /* 카페24 BEST SELLER 모듈은 4개만 뿌린다. 떡메모지(10)가 빠져서 직접 채운다. */
+  var MISSING = {
+    no: 10,
+    name: '[리치파카] B5 스케줄 메모지 체크리스트 떡메모지 공시생 대학생 필기 (프리미엄 500매)',
+    price: '3,900원',
+    img: 'https://richhabit.co.kr/web/product/medium/202504/a01a85b56db50422bbf4de8ba8a8ee90.png'
+  };
+
+  function addMissing(sec) {
+    if (sec.querySelector('#anchorBoxId_' + MISSING.no)) return;   /* 이미 있으면 안 넣는다 */
+    var cards = sec.querySelectorAll('li[id^="anchorBoxId_"]');
+    if (!cards.length) return;
+    var ul = cards[0].parentNode;
+    var cell = cards[0].cloneNode(true);
+    cell.id = 'anchorBoxId_' + MISSING.no;
+    cell.removeAttribute('data-z21');
+
+    var im = cell.querySelector('img');
+    if (im) { im.removeAttribute('srcset'); im.setAttribute('src', MISSING.img); im.setAttribute('alt', MISSING.name); }
+    var srcs = cell.querySelectorAll('source');
+    for (var s2 = 0; s2 < srcs.length; s2++) srcs[s2].parentNode.removeChild(srcs[s2]);
+
+    var links = cell.querySelectorAll('a');
+    for (var k = 0; k < links.length; k++) links[k].setAttribute('href', url('/product/detail.html?product_no=' + MISSING.no));
+
+    var nm = cell.querySelector('.name a span:last-child, .name span:last-child');
+    if (nm) nm.textContent = MISSING.name;
+
+    /* 가격 줄만 남기고 소비자가·요약설명 같은 나머지 줄은 지운다 (원본 카드에서 복제됐으므로) */
+    var rows = cell.querySelectorAll('ul.spec > li');
+    for (var r = 0; r < rows.length; r++) {
+      var t = rows[r].textContent || '';
+      if (t.indexOf('판매가') > -1) {
+        var v = rows[r].querySelector('span:last-child');
+        if (v) v.textContent = MISSING.price;
+      } else {
+        rows[r].parentNode.removeChild(rows[r]);
+      }
+    }
+    var badge = cell.querySelector('.icon, .badge');
+    if (badge) badge.innerHTML = '';
+    ul.appendChild(cell);
+  }
+
   function liftBestSeller() {
     var sec = document.querySelector('.main_product_category');
     if (!sec || sec.getAttribute('data-z21lift') === '1') return;
@@ -555,6 +612,7 @@
     sec.setAttribute('data-z21lift', '1');
     sec.style.display = '';
     hero.parentNode.insertBefore(sec, hero.nextSibling);
+    try { addMissing(sec); } catch (e) { }
   }
 
   /* 상단 메뉴 — 리치파카 요청(2026-09-08 카톡)
