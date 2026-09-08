@@ -329,7 +329,9 @@
     }
     h += '</div>';
     box.innerHTML = h;
-    anchor.parentNode.insertBefore(box, anchor);
+    if (anchor) anchor.parentNode.insertBefore(box, anchor);
+    else if (after.id === 'contents') after.appendChild(box);
+    else after.parentNode.insertBefore(box, after.nextSibling);
   }
 
   /* ---------- 2-3) 오우이(skin30) 화장품 샘플 갈아입히기 ----------
@@ -547,9 +549,15 @@
 
   function dressStory() {
     if (document.querySelector('.z21-st')) return;
+    /* 원래는 ONLY!ON / NEW ARRIVALS 자리에 넣었는데 그 섹션들을 편집기에서 삭제했다.
+       없으면 BEST SELLER 다음에 붙인다. 그것도 없으면 #contents 끝. */
     var anchor = document.querySelector('.main_product_slide') ||
                  document.querySelector('.main_product_list');
-    if (!anchor) return;
+    var after = null;
+    if (!anchor) {
+      after = document.querySelector('.main_product_category') || document.getElementById('contents');
+      if (!after) return;
+    }
 
     var box = document.createElement('div');
     box.className = 'z21-st';
