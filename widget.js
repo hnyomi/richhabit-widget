@@ -371,10 +371,21 @@
   }
 
   function dressHero() {
+    if (document.querySelector('.z21-oh')) return;
+    /* 관리자에서 화장품 배너 3장을 전부 끄면 스마트배너 섹션 자체가 사라진다(실측).
+       그러면 앵커가 없어 히어로가 아예 안 붙는다 → #contents 맨 앞을 대체 자리로 쓴다. */
     var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00001"]');
-    if (!host || host.getAttribute('data-z21hero') === '1') return;
-    host.setAttribute('data-z21hero', '1');
-    host.style.display = 'none';
+    var fallback = null;
+    if (!host) {
+      fallback = document.getElementById('contents') ||
+                 document.querySelector('.xans-layout-main') ||
+                 document.querySelector('#container');
+      if (!fallback) return;
+    } else {
+      if (host.getAttribute('data-z21hero') === '1') return;
+      host.setAttribute('data-z21hero', '1');
+      host.style.display = 'none';
+    }
 
     var h = OUI.hero;
     var box = document.createElement('div');
@@ -391,7 +402,8 @@
       '<span class="z21-oh__s">' + h.sub + '</span>' +
       '<a class="z21-oh__btn" href="' + h.href + '">' + h.cta + '</a>' +
       '</div>';
-    host.parentNode.insertBefore(box, host.nextSibling);
+    if (host) host.parentNode.insertBefore(box, host.nextSibling);
+    else fallback.insertBefore(box, fallback.firstChild);
   }
 
   /* ON STORE! 3칸 — 화장품 문구/이미지를 리치해빗 상품 3종으로 */
