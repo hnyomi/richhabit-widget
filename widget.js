@@ -87,8 +87,8 @@
     /* 사진 자체에 강의 자막이 박혀 있어서 우리 카피와 두 겹으로 읽힌다.
        글자가 놓이는 왼쪽만 흐리게+어둡게 덮어 사진 글씨를 뭉갠다. 오른쪽 인물은 그대로 둔다. */
     '.z21-oh__blur{position:absolute;left:0;top:0;right:0;bottom:0;z-index:1;pointer-events:none;overflow:hidden;',
-    '-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 46%,transparent 74%);',
-    'mask-image:linear-gradient(90deg,#000 0%,#000 46%,transparent 74%)}',
+    '-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 58%,transparent 71%);',
+    'mask-image:linear-gradient(90deg,#000 0%,#000 58%,transparent 71%)}',
     '.z21-oh__blur img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;',
     'filter:blur(22px) brightness(.5);transform:scale(1.12)}',
     '.z21-oh__dim{position:absolute;left:0;top:0;bottom:0;width:80%;z-index:1;pointer-events:none;',
@@ -189,8 +189,8 @@
     '.z21-oh__s{font-size:14px;margin-top:12px}',
     '.z21-oh__btn{margin-top:20px;padding:12px 24px;font-size:13px}',
     '.z21-oh__scrim{background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.15) 35%,rgba(0,0,0,.70) 100%)}',
-    '.z21-oh__blur{-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 66%,transparent 96%);',
-    'mask-image:linear-gradient(90deg,#000 0%,#000 66%,transparent 96%)}',
+    '.z21-oh__blur{-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 80%,transparent 100%);',
+    'mask-image:linear-gradient(90deg,#000 0%,#000 80%,transparent 100%)}',
     '.z21-oh__blur img{object-position:50% 12%;filter:blur(24px) brightness(.46)}',
     '.z21-oh__dim{width:100%;background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.62) 70%,rgba(0,0,0,.18) 100%)}',
     '.z21-tr{padding:30px 0}',
