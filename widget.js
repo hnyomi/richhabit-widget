@@ -144,6 +144,7 @@
     '.z21-st__in{max-width:1230px;margin:0 auto;padding:0 20px;text-align:center}',
     '.z21-st__eb{display:block;font-size:12px;letter-spacing:.24em;color:#c8a86b;margin-bottom:16px}',
     '.z21-st__t{display:block;font-size:34px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px;word-break:keep-all;text-wrap:balance}',
+    '.z21-mobr{display:none}',
     '.z21-st__body{max-width:660px;margin:0 auto}',
     '.z21-st__body p{font-size:15px;line-height:1.85;color:rgba(255,255,255,.76);margin:0 0 12px;word-break:keep-all;overflow-wrap:break-word;text-wrap:pretty}',
     '.z21-st__stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;margin:38px 0 32px}',
@@ -203,6 +204,7 @@
     '.z21-empty{margin:36px 16px;padding:32px 20px}',
     '.z21-st{padding:52px 0}',
     '.z21-st__t{font-size:23px;margin-bottom:18px;line-height:1.35}',
+    '.z21-mobr{display:inline}',   /* 모바일에서만 제목을 두 줄로 끊는다 */
     '.z21-st__body p{font-size:14px;line-height:1.75;margin-bottom:14px}',
     '.z21-st__in{padding:0 22px}',
     '.z21-st__eb{font-size:11px;margin-bottom:12px}',
@@ -574,7 +576,7 @@
     eyebrow: 'BRAND STORY',
     /* 제목·마지막 두 문장은 몰 회사소개(shopinfo/company.html) 원문 그대로.
        가운데 두 문장은 리치파카 본인 블로그 원문(224385474910). 지어낸 문장 없음. */
-    title: '작은 습관이 쌓여 인생의 궤도를 바꿉니다',
+    title: '작은 습관이 쌓여<br class="z21-mobr">인생의 궤도를 바꿉니다',
     body: [
       '월급 275만 원을 받던 직업군인이었습니다. 착실히 모으면 인생이 달라질 줄 알았지만 그렇지 않았습니다.',
       '전역을 준비하던 마지막 9개월, 새벽에 책을 읽고 읽은 것을 매일 기록했습니다.',
@@ -845,6 +847,33 @@
     }
   }
 
+  /* 모바일은 헤더 메뉴가 따로다 — 햄버거 안의 #slide_add_category(제품/전자책/챌린지 3개).
+     PC 네비(dressNav)는 이걸 못 건드려서 폰에서만 옛 카테고리 3개가 그대로 떴다. */
+  function dressNavMo() {
+    var ul = document.getElementById('slide_add_category');
+    if (!ul || ul.getAttribute('data-z21nav') === '1') return;
+    ul.setAttribute('data-z21nav', '1');
+    var li = ul.querySelectorAll(':scope > li');
+    if (!li.length) return;
+    var tpl = li[0].cloneNode(true);
+    var sub = tpl.querySelector('ul');
+    if (sub) sub.parentNode.removeChild(sub);          /* 전자책 하위메뉴가 딸려온다 */
+    for (var h = 0; h < li.length; h++) li[h].style.display = 'none';
+
+    for (var n = 0; n < NAV.length; n++) {
+      var item = NAV[n];
+      var cell = tpl.cloneNode(true);
+      cell.style.display = '';
+      var a = cell.querySelector('a');
+      if (!a) continue;
+      a.textContent = item.txt;
+      a.setAttribute('href', item.out ? item.href : url(item.href));
+      if (item.out) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      else a.removeAttribute('target');
+      ul.appendChild(cell);
+    }
+  }
+
   /* 섹션 제목 문구 갈아끼우기 */
   function retitle(sel, t1, t2) {
     var s = document.querySelector(sel);
@@ -934,7 +963,7 @@
   var observer = null, scheduled = false, runs = 0;
 
   function paint() {
-    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressNav(); dressBank(); dressAbout(); dressOui(); } catch (e) { }
+    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); emptyCategoryNotice(); dressNav(); dressNavMo(); dressBank(); dressAbout(); dressOui(); } catch (e) { }
   }
 
   /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
