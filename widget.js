@@ -95,6 +95,16 @@
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
+    /* 플로팅 문의 버튼 */
+    '.z21-fab{position:fixed;right:22px;bottom:22px;z-index:900;display:flex;flex-direction:column;gap:10px}',
+    '.z21-fab__b{display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;',
+    'font-size:13px;font-weight:600;text-decoration:none;letter-spacing:-.3px;',
+    'box-shadow:0 4px 14px rgba(0,0,0,.16);transition:transform .18s,box-shadow .18s}',
+    '.z21-fab__b:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.22)}',
+    '.z21-fab__b svg{width:18px;height:18px;flex:none}',
+    '.z21-fab__k{background:#FEE500;color:#191600}',
+    '.z21-fab__n{background:#1d1d1d;color:#fff}',
+
     /* 히어로 비네팅 */
     '.z21-hero{position:relative}',
     '.z21-hero::after{content:"";position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:2;',
@@ -119,6 +129,9 @@
     '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
     '.z21-tr .z21-stars.big{font-size:20px}',
     '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
+    '.z21-fab{right:12px;bottom:14px;gap:8px}',
+    '.z21-fab__b{padding:10px 13px;font-size:12px}',
+    '.z21-fab__b svg{width:16px;height:16px}',
     '.z21-hero::after{background:radial-gradient(140% 100% at 50% 45%,rgba(0,0,0,0) 46%,rgba(0,0,0,.14) 78%,rgba(0,0,0,.34) 100%)}',
     '}'
   ].join('');
@@ -395,6 +408,27 @@
     }
   }
 
+  /* 플로팅 문의 버튼 — 기존 스킨(skin15)에 있던 카톡·뉴스레터 버튼을 오우이에도.
+     원본은 이미지 버튼이었지만 여기선 CSS로 다시 그린다(레티나에서 안 뭉개지고 가볍다). */
+  var FLOAT = {
+    kakao: 'https://pf.kakao.com/_xmkvPxj',
+    letter: '/board/' + encodeURIComponent('뉴스레터') + '/8/'
+  };
+
+  function dressFloat() {
+    if (document.querySelector('.z21-fab')) return;
+    var box = document.createElement('div');
+    box.className = 'z21-fab';
+    box.innerHTML =
+      '<a class="z21-fab__b z21-fab__k" href="' + FLOAT.kakao + '" target="_blank" rel="noopener">' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 3C6.99 3 3 6.2 3 10.15c0 2.5 1.65 4.7 4.14 5.97-.18.63-.65 2.28-.75 2.64-.12.45.16.44.35.32.14-.09 2.26-1.53 3.18-2.16.67.1 1.36.15 2.08.15 5.01 0 9-3.2 9-7.15S17.01 3 12 3z"/></svg>' +
+      '<span>카톡 문의</span></a>' +
+      '<a class="z21-fab__b z21-fab__n" href="' + FLOAT.letter + '">' +
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M3 6.5h18v11H3zM3 7l9 6 9-6"/></svg>' +
+      '<span>뉴스레터</span></a>';
+    document.body.appendChild(box);
+  }
+
   /* 섹션 제목 문구 갈아끼우기 */
   function retitle(sel, t1, t2) {
     var s = document.querySelector(sel);
@@ -419,6 +453,7 @@
     dressHero();
     dressPicks();
     dressTrust();
+    dressFloat();
     fixTabs();
     retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
     retitle('.main_product_list', 'ALL PRODUCTS', '습관을 만드는 도구 전체');
