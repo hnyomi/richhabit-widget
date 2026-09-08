@@ -751,8 +751,17 @@
       if (!cell) {                     /* 모자라면 첫 항목을 복제해서 채운다 */
         cell = tpl.cloneNode(true);
         ul.appendChild(cell);
+        /* 복제본이 스킨 CSS를 못 받아 폭 0으로 찌그러진다(실측).
+           원본의 계산된 display 를 그대로 물려준다. */
+        try {
+          var cs = window.getComputedStyle(tpl);
+          cell.style.display = cs.display;
+          cell.style.width = 'auto';
+          cell.style.flex = cs.flex;
+        } catch (x) { cell.style.display = 'flex'; cell.style.width = 'auto'; }
+      } else {
+        cell.style.display = '';
       }
-      cell.style.display = '';
       var a = cell.querySelector('a');
       if (!a) continue;
       a.textContent = item.txt;
