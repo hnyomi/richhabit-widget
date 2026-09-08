@@ -541,6 +541,58 @@
     document.body.appendChild(box);
   }
 
+  /* BEST SELLER 를 히어로 바로 아래로 끌어올린다.
+     이게 진짜 상품카드라 별점·리뷰수·가격·할인율이 자동으로 붙는다(배너로는 안 된다). */
+  function liftBestSeller() {
+    var sec = document.querySelector('.main_product_category');
+    if (!sec || sec.getAttribute('data-z21lift') === '1') return;
+    var hero = document.querySelector('.z21-oh');
+    if (!hero) return;
+    sec.setAttribute('data-z21lift', '1');
+    sec.style.display = '';
+    hero.parentNode.insertBefore(sec, hero.nextSibling);
+  }
+
+  /* 상단 메뉴 — 리치파카 요청(2026-09-08 카톡)
+     리치해빗(소개) / 제품 / 뉴스레터 / 클래스. 전자책·챌린지는 타 사이트에 있어 뺀다. */
+  var NAV = [
+    { txt: '리치해빗', href: '/shopinfo/company.html', out: false },
+    { txt: '제품',    href: '/product/list.html?cate_no=23', out: false },
+    { txt: '뉴스레터', href: 'https://richpaca.stibee.com/', out: true },
+    { txt: '클래스',  href: 'https://richpaca.com/', out: true }
+  ];
+
+  function dressNav() {
+    var probe = null, links = document.querySelectorAll('a');
+    for (var i = 0; i < links.length; i++) {
+      if ((links[i].textContent || '').trim() === '제품') { probe = links[i]; break; }
+    }
+    if (!probe) return;
+    var ul = probe.closest ? probe.closest('ul') : null;
+    if (!ul || ul.getAttribute('data-z21nav') === '1') return;
+    ul.setAttribute('data-z21nav', '1');
+
+    var li = ul.querySelectorAll('li');
+    if (!li.length) return;
+    var tpl = li[0];
+
+    for (var n = 0; n < NAV.length; n++) {
+      var item = NAV[n], cell = li[n];
+      if (!cell) {                     /* 모자라면 첫 항목을 복제해서 채운다 */
+        cell = tpl.cloneNode(true);
+        ul.appendChild(cell);
+      }
+      cell.style.display = '';
+      var a = cell.querySelector('a');
+      if (!a) continue;
+      a.textContent = item.txt;
+      a.setAttribute('href', item.out ? item.href : url(item.href));
+      if (item.out) { a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+      else { a.removeAttribute('target'); }
+    }
+    for (var m = NAV.length; m < li.length; m++) li[m].style.display = 'none';  /* 남는 건 숨김 */
+  }
+
   /* 섹션 제목 문구 갈아끼우기 */
   function retitle(sel, t1, t2) {
     var s = document.querySelector(sel);
@@ -563,17 +615,19 @@
   function dressOui() {
     if (!isOui()) return;
     dressHero();
-    dressPicks();
+    dressNav();
     dressTrust();
     dressStory();
     dressFloat();
     fixTabs();
+    retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
     hide('.main_video');          /* FASHION CAMPAIGN 샘플 영상 */
     hide('.main_text');           /* OOUI HOT EVENT */
     hide('.main_map');            /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
-    hide('.main_product_slide');     /* ONLY! ON */
-    hide('.main_product_category');  /* BEST! SELLER */
-    hide('.main_product_list');      /* NEW! ARRIVALS(ALL PRODUCTS) */
+    hide('.main_product_slide');            /* ONLY! ON — 상품이 겹친다 */
+    hide('.main_image_text_gallery');       /* BEST PICK 배너 3개 — 상품 5개 중 3개만 나와서 뺀다 */
+    hide('.main_product_list');             /* NEW! ARRIVALS — BEST SELLER와 겹친다 */
+    liftBestSeller();                       /* BEST SELLER(실제 상품카드 5개+별점)를 히어로 바로 밑으로 */
     /* ※ 상품 섹션 3개 모두 제거(대표 지시 2026-09-08).
        상품이 5개뿐이라 세 섹션이 전부 같은 걸 보여줬다. 메인엔 BEST PICK 3종만 남는다.
        ※ .main_product_category 는 isOui() 판별자다. display:none 이라 DOM엔 남아 있어 판별은 계속 된다.
