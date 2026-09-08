@@ -548,12 +548,16 @@
     dressStory();
     dressFloat();
     fixTabs();
-    retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
-    retitle('.main_product_list', 'ALL PRODUCTS', '습관을 만드는 도구 전체');
     hide('.main_video');          /* FASHION CAMPAIGN 샘플 영상 */
     hide('.main_text');           /* OOUI HOT EVENT */
     hide('.main_map');            /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
-    hide('.main_product_slide');  /* ONLY! ON — BEST SELLER와 상품이 완전히 겹친다(상품 5개뿐) */
+    hide('.main_product_slide');     /* ONLY! ON */
+    hide('.main_product_category');  /* BEST! SELLER */
+    hide('.main_product_list');      /* NEW! ARRIVALS(ALL PRODUCTS) */
+    /* ※ 상품 섹션 3개 모두 제거(대표 지시 2026-09-08).
+       상품이 5개뿐이라 세 섹션이 전부 같은 걸 보여줬다. 메인엔 BEST PICK 3종만 남는다.
+       ※ .main_product_category 는 isOui() 판별자다. display:none 이라 DOM엔 남아 있어 판별은 계속 된다.
+          절대 removeChild 하지 말 것 — 지우면 오우이 판별이 깨져 위젯 전체가 죽는다. */
   }
 
   /* ---------- 2-4) 빈 카테고리 안내 ----------
