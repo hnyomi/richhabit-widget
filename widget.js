@@ -70,6 +70,30 @@
     '.z21-gal__grid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}',
     '.z21-gal__grid a:hover img{transform:scale(1.06)}',
 
+    /* 오우이 교체 히어로 */
+    '.z21-oh{position:relative;width:100%;height:600px;overflow:hidden;background:#1b1b1b}',
+    '.z21-oh__pic,.z21-oh__pic img{display:block;width:100%;height:100%;object-fit:cover}',
+    '.z21-oh__scrim{position:absolute;left:0;top:0;right:0;bottom:0;',
+    'background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 42%,rgba(0,0,0,.12) 70%,rgba(0,0,0,.35) 100%)}',
+    '.z21-oh__in{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:520px;color:#fff}',
+    '.z21-oh__eb{display:block;font-size:12px;letter-spacing:.22em;opacity:.8;margin-bottom:14px}',
+    '.z21-oh__t{display:block;font-size:44px;line-height:1.28;font-weight:700;letter-spacing:-.5px}',
+    '.z21-oh__s{display:block;margin-top:16px;font-size:15px;line-height:1.6;opacity:.88}',
+    '.z21-oh__btn{display:inline-block;margin-top:28px;padding:13px 30px;background:#fff;color:#141414;',
+    'font-size:14px;font-weight:600;text-decoration:none;border-radius:2px}',
+    '.z21-oh__btn:hover{background:#f0a500;color:#fff}',
+
+    /* 리뷰 신뢰 띠배너 */
+    '.z21-tr{background:#fbf9f6;padding:44px 0;margin:0}',
+    '.z21-tr__in{max-width:1230px;margin:0 auto;padding:0 20px}',
+    '.z21-tr__head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}',
+    '.z21-tr__head b{font-size:26px;font-weight:700;color:#1d1d1d;line-height:1}',
+    '.z21-tr__head span{font-size:14px;color:#6d6d6d}',
+    '.z21-tr .z21-stars.big{font-size:24px;letter-spacing:3px}',
+    '.z21-tr__pics{display:grid;grid-template-columns:repeat(10,1fr);gap:8px;margin-top:22px}',
+    '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
+    '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
+
     /* 히어로 비네팅 */
     '.z21-hero{position:relative}',
     '.z21-hero::after{content:"";position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:2;',
@@ -83,6 +107,16 @@
     '.z21-sum__pics{grid-template-columns:repeat(4,1fr)}',
     '.z21-gal__grid{grid-template-columns:repeat(3,1fr);gap:6px}',
     '.z21-gal__head b{font-size:15px}',
+    '.z21-oh{height:auto;aspect-ratio:720/767}',
+    '.z21-oh__in{left:6%;right:6%;max-width:none}',
+    '.z21-oh__t{font-size:30px}',
+    '.z21-oh__s{font-size:14px;margin-top:12px}',
+    '.z21-oh__btn{margin-top:20px;padding:12px 24px;font-size:13px}',
+    '.z21-oh__scrim{background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.15) 35%,rgba(0,0,0,.70) 100%)}',
+    '.z21-tr{padding:30px 0}',
+    '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
+    '.z21-tr .z21-stars.big{font-size:20px}',
+    '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
     '.z21-hero::after{background:radial-gradient(140% 100% at 50% 45%,rgba(0,0,0,0) 46%,rgba(0,0,0,.14) 78%,rgba(0,0,0,.34) 100%)}',
     '}'
   ].join('');
@@ -216,6 +250,135 @@
     anchor.parentNode.insertBefore(box, anchor);
   }
 
+  /* ---------- 2-3) 오우이(skin30) 화장품 샘플 갈아입히기 ----------
+     오우이 기본 스킨은 화장품몰 샘플(앰플·세럼·오프라인 매장)이 그대로 들어있다.
+     스킨 파일은 API로 못 고치므로(403 Invalid API) 프론트에서 바꿔 끼운다.
+     ※ 오우이가 아닌 스킨에서는 marker 가 없어 아무 일도 하지 않는다. */
+  var OUI = {
+    hero: {
+      pc: 'https://file.cafe24cos.com/banner-admin-live/upload/richhabit/87b75b0c-bbef-4283-92fc-ad34e30de16d.png',
+      mo: 'https://file.cafe24cos.com/banner-admin-live/upload/richhabit/4f2f109d-ff23-495f-afee-a25ea047d2aa.png',
+      eyebrow: 'RICHHABIT',
+      title: '부는 습관으로부터<br>나옵니다',
+      sub: '독서 습관과 콘텐츠 마케팅으로 부의 추월차선에 올라타세요',
+      cta: '제품 보러가기',
+      href: '/product/list.html?cate_no=23'
+    },
+    picks: [
+      { no: 9,  name: '2026 성공플래너 다이어리', desc: '습관과 루틴을 기록하는 한 해',
+        img: 'https://richhabit.co.kr/web/product/big/202512/edeb81d6461a34ce504f71a374dc9ba6.png' },
+      { no: 11, name: '아웃풋 독서노트', desc: '50권의 책을 기록하는 독서 습관',
+        img: 'https://richhabit.co.kr/web/product/big/202604/191070d5151a5f0de7a8f82f09d3b6ea.jpg' },
+      { no: 46, name: '360도 회전 아크릴 독서대', desc: '높이까지 맞추는 몰입 독서 환경',
+        img: 'https://richhabit.co.kr/web/product/big/202509/f259287b6cdeab5c1b56caac968fa09b.jpeg' }
+    ]
+  };
+
+  function isOui() { return !!document.querySelector('.main_image_text_gallery'); }
+
+  function hide(sel) {
+    var els = document.querySelectorAll(sel);
+    for (var i = 0; i < els.length; i++) {
+      if (els[i].getAttribute('data-z21off') === '1') continue;
+      els[i].setAttribute('data-z21off', '1');
+      els[i].style.display = 'none';
+    }
+  }
+
+  function dressHero() {
+    var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00001"]');
+    if (!host || host.getAttribute('data-z21hero') === '1') return;
+    host.setAttribute('data-z21hero', '1');
+    host.style.display = 'none';
+
+    var h = OUI.hero;
+    var box = document.createElement('div');
+    box.className = 'z21-oh';
+    box.innerHTML =
+      '<picture class="z21-oh__pic">' +
+      '<source media="(max-width:767px)" srcset="' + h.mo + '">' +
+      '<img src="' + h.pc + '" alt="리치해빗">' +
+      '</picture>' +
+      '<div class="z21-oh__scrim"></div>' +
+      '<div class="z21-oh__in">' +
+      '<span class="z21-oh__eb">' + h.eyebrow + '</span>' +
+      '<strong class="z21-oh__t">' + h.title + '</strong>' +
+      '<span class="z21-oh__s">' + h.sub + '</span>' +
+      '<a class="z21-oh__btn" href="' + h.href + '">' + h.cta + '</a>' +
+      '</div>';
+    host.parentNode.insertBefore(box, host.nextSibling);
+  }
+
+  /* ON STORE! 3칸 — 화장품 문구/이미지를 리치해빗 상품 3종으로 */
+  function dressPicks() {
+    var sec = document.querySelector('.main_image_text_gallery');
+    if (!sec || sec.getAttribute('data-z21pick') === '1') return;
+    sec.setAttribute('data-z21pick', '1');
+
+    var t1 = sec.querySelector('.main_title_txt01');
+    var t2 = sec.querySelector('.main_title_txt02');
+    if (t1) t1.textContent = 'BEST PICK';
+    if (t2) t2.textContent = '리치해빗이 가장 많이 팔린 3가지';
+
+    var cells = sec.querySelectorAll('.main_3dan_banner > *');
+    for (var i = 0; i < cells.length && i < OUI.picks.length; i++) {
+      var p = OUI.picks[i], cell = cells[i];
+      var im = cell.querySelector('img');
+      if (im) {
+        im.removeAttribute('srcset');
+        var src = cell.querySelector('source');
+        if (src) src.setAttribute('srcset', p.img);
+        im.setAttribute('src', p.img);
+        im.style.objectFit = 'cover';
+      }
+      var nm = cell.querySelector('.main_banner_txt01');
+      if (nm) nm.textContent = p.name;
+      var dc = cell.querySelector('.main_banner_txt02');
+      if (dc) dc.textContent = p.desc;
+      var mo = cell.querySelector('.main_banner_more, .main_banner_more a');
+      if (mo) mo.textContent = '자세히 보기';
+      var links = cell.querySelectorAll('a');
+      for (var k = 0; k < links.length; k++) links[k].setAttribute('href', '/product/detail.html?product_no=' + p.no);
+    }
+  }
+
+  /* 중간 띠배너 — 리뷰 신뢰 배너로 */
+  function dressTrust() {
+    var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00002"]');
+    if (!host || host.getAttribute('data-z21trust') === '1') return;
+    host.setAttribute('data-z21trust', '1');
+    host.style.display = 'none';
+
+    var total = 0, photo = 0, pics = [];
+    for (var k in RV) { if (RV[k].cnt) { total += RV[k].cnt; photo += (RV[k].photo || 0); } }
+    for (var g in GAL) { for (var i = 0; i < GAL[g].length && pics.length < 10; i++) pics.push(GAL[g][i]); }
+
+    var box = document.createElement('div');
+    box.className = 'z21-tr';
+    var h = '<div class="z21-tr__in"><div class="z21-tr__head">' + stars(4.9, 'big') +
+            '<b>4.9</b><span>구매자 리뷰 ' + num(total) + '개 · 포토리뷰 ' + num(photo) + '장</span></div>';
+    if (pics.length) {
+      h += '<div class="z21-tr__pics">';
+      for (var j = 0; j < Math.min(10, pics.length); j++) {
+        h += '<a href="' + articleUrl(pics[j].a) + '"><img src="' + pics[j].u + '" loading="lazy" alt="구매자 포토리뷰"></a>';
+      }
+      h += '</div>';
+    }
+    h += '</div>';
+    box.innerHTML = h;
+    host.parentNode.insertBefore(box, host.nextSibling);
+  }
+
+  function dressOui() {
+    if (!isOui()) return;
+    dressHero();
+    dressPicks();
+    dressTrust();
+    hide('.main_video');   /* FASHION CAMPAIGN 샘플 영상 */
+    hide('.main_text');    /* OOUI HOT EVENT */
+    hide('.main_map');     /* 오프라인 스토어 + 지도 — 리치해빗은 매장 없음 */
+  }
+
   /* ---------- 3) 히어로 비네팅 ---------- */
   function paintHero() {
     if (!/^\/($|index)/.test(location.pathname)) return;
@@ -228,7 +391,7 @@
   var observer = null, scheduled = false, runs = 0;
 
   function paint() {
-    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); } catch (e) { }
+    try { injectCss(); paintCards(); killNegative(); paintDetail(); paintGallery(); paintHero(); dressOui(); } catch (e) { }
   }
 
   /* 감시 중 자기 변경에 다시 반응하지 않도록 관찰을 끊고 그린 뒤 다시 붙인다.
