@@ -373,6 +373,17 @@
     h += '</div>';
     box.innerHTML = h;
     host.parentNode.insertBefore(box, host.nextSibling);
+
+    /* 포토 스트립은 외부 CDN(네이버)이라 막히는 환경이 있다.
+       4초 안에 한 장도 못 뜨면 빈 칸을 보여주느니 그 줄만 숨긴다. */
+    var strip = box.querySelector('.z21-tr__pics');
+    if (strip) {
+      setTimeout(function () {
+        var im = strip.querySelectorAll('img'), ok = 0;
+        for (var i = 0; i < im.length; i++) if (im[i].complete && im[i].naturalWidth > 0) ok++;
+        if (ok === 0) strip.style.display = 'none';
+      }, 4000);
+    }
   }
 
   function dressOui() {
