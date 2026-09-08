@@ -84,9 +84,17 @@
     '.z21-oh{position:relative;width:100%;height:600px;overflow:hidden;background:#1b1b1b}',
     /* object-position 을 위쪽으로 당겨야 인물 머리가 안 잘린다 (기본 50% 50%면 잘림) */
     '.z21-oh__pic,.z21-oh__pic img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%}',
+    /* 사진 자체에 강의 자막이 박혀 있어서 우리 카피와 두 겹으로 읽힌다.
+       글자가 놓이는 왼쪽만 흐리게+어둡게 덮어 사진 글씨를 뭉갠다. 오른쪽 인물은 그대로 둔다. */
+    '.z21-oh__blur{position:absolute;left:0;top:0;bottom:0;width:66%;z-index:1;pointer-events:none;',
+    '-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);',
+    '-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 55%,transparent 100%);',
+    'mask-image:linear-gradient(90deg,#000 0%,#000 55%,transparent 100%)}',
+    '.z21-oh__dim{position:absolute;left:0;top:0;bottom:0;width:72%;z-index:1;pointer-events:none;',
+    'background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,0) 100%)}',
     '.z21-oh__scrim{position:absolute;left:0;top:0;right:0;bottom:0;',
     'background:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.45) 42%,rgba(0,0,0,.12) 70%,rgba(0,0,0,.35) 100%)}',
-    '.z21-oh__in{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:520px;color:#fff}',
+    '.z21-oh__in{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:520px;color:#fff;z-index:3}',
     '.z21-oh__eb{display:block;font-size:12px;letter-spacing:.22em;opacity:.8;margin-bottom:14px}',
     '.z21-oh__t{display:block;font-size:44px;line-height:1.28;font-weight:700;letter-spacing:-.5px}',
     '.z21-oh__s{display:block;margin-top:16px;font-size:15px;line-height:1.6;opacity:.88}',
@@ -180,6 +188,10 @@
     '.z21-oh__s{font-size:14px;margin-top:12px}',
     '.z21-oh__btn{margin-top:20px;padding:12px 24px;font-size:13px}',
     '.z21-oh__scrim{background:linear-gradient(180deg,rgba(0,0,0,.30) 0%,rgba(0,0,0,.15) 35%,rgba(0,0,0,.70) 100%)}',
+    '.z21-oh__blur{width:100%;-webkit-backdrop-filter:blur(11px);backdrop-filter:blur(11px);',
+    '-webkit-mask-image:linear-gradient(90deg,#000 0%,#000 68%,transparent 100%);',
+    'mask-image:linear-gradient(90deg,#000 0%,#000 68%,transparent 100%)}',
+    '.z21-oh__dim{width:100%;background:linear-gradient(90deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.52) 55%,rgba(0,0,0,.10) 100%)}',
     '.z21-tr{padding:30px 0}',
     '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
     '.z21-tr .z21-stars.big{font-size:20px}',
@@ -408,6 +420,8 @@
       '<source media="(max-width:767px)" srcset="' + h.mo + '">' +
       '<img src="' + h.pc + '" alt="리치해빗">' +
       '</picture>' +
+      '<div class="z21-oh__blur"></div>' +
+      '<div class="z21-oh__dim"></div>' +
       '<div class="z21-oh__scrim"></div>' +
       '<div class="z21-oh__in">' +
       '<span class="z21-oh__eb">' + h.eyebrow + '</span>' +
@@ -530,7 +544,17 @@
     box.className = 'z21-about';
     box.innerHTML = ABOUT_HTML;
     host.insertBefore(box, host.firstChild);
-    /* 사업자정보표는 아래로 밀되 남겨둔다(법정 표기) */
+
+    /* 오우이 기본 회사소개 정보표(상점명·대표이사·사업자등록번호 표)는 지운다(대표 지시).
+       같은 정보가 푸터에 이미 있다. About 내용만 남긴다. */
+    var kids = host.children;
+    for (var k = 0; k < kids.length; k++) {
+      if (kids[k] === box) continue;
+      var t = (kids[k].textContent || '');
+      if (t.indexOf('회사소개 정보') > -1 || (t.indexOf('상점명') > -1 && t.indexOf('사업자등록번호') > -1)) {
+        kids[k].style.display = 'none';
+      }
+    }
   }
 
   /* 리치파카 소개(스토리) 섹션 — ONLY!ON 을 뺀 자리에 들어간다.
@@ -570,6 +594,9 @@
        없으면 BEST SELLER 다음에 붙인다. 그것도 없으면 #contents 끝. */
     var anchor = document.querySelector('.main_product_slide') ||
                  document.querySelector('.main_product_list');
+    /* 편집기에서 그 섹션들을 '삭제'하면 DOM에 아예 없다(숨김이 아니라 삭제).
+       그때 anchor 가 null 인데 아래에서 anchor.parentNode 를 쓰다 죽었고,
+       paint()의 try/catch가 삼켜서 뒤따르는 5번째 상품·카톡버튼까지 통째로 멈췄다. */
     var after = null;
     if (!anchor) {
       after = document.querySelector('.main_product_category') || document.getElementById('contents');
@@ -590,7 +617,9 @@
     h += '</div><a class="z21-st__btn" href="' + STORY.href + '" target="_blank" rel="noopener">' +
          STORY.cta + '</a></div>';
     box.innerHTML = h;
-    anchor.parentNode.insertBefore(box, anchor);
+    if (anchor) anchor.parentNode.insertBefore(box, anchor);
+    else if (after.id === 'contents') after.appendChild(box);
+    else after.parentNode.insertBefore(box, after.nextSibling);   /* BEST SELLER 바로 아래 */
   }
 
   /* 푸터 무통장 계좌정보 — 오우이 기본값이 "은행 / 0000-000-00000 / 예금주" 샘플 그대로다.
@@ -827,11 +856,10 @@
 
   function dressOui() {
     if (!isOui()) return;
-    dressHero();
-    dressTrust();
-    dressStory();
-    dressFloat();
-    fixTabs();
+    /* 하나가 예외를 던져도 나머지는 돌게 낱개로 감싼다.
+       예전엔 dressStory() 하나가 죽으면서 뒤의 5번째 상품·카톡버튼이 전부 멈췄다. */
+    var steps = [dressHero, dressTrust, dressStory, dressFloat, fixTabs];
+    for (var s = 0; s < steps.length; s++) { try { steps[s](); } catch (e) {} }
     /* 카피는 브랜드 자기 언어에서. 회사소개 원문 "작게, 그러나 매일" 계열. */
     retitle('.main_product_category', 'BEST SELLER', '858개의 후기가 증명한, 매일 쓰게 되는 것들');
     hide('.main_video');          /* FASHION CAMPAIGN 샘플 영상 */
@@ -840,7 +868,7 @@
     hide('.main_product_slide');            /* ONLY! ON — 상품이 겹친다 */
     hide('.main_image_text_gallery');       /* BEST PICK 배너 3개 — 상품 5개 중 3개만 나와서 뺀다 */
     hide('.main_product_list');             /* NEW! ARRIVALS — BEST SELLER와 겹친다 */
-    liftBestSeller();                       /* BEST SELLER(실제 상품카드 5개+별점)를 히어로 바로 밑으로 */
+    try { liftBestSeller(); } catch (e) {}  /* BEST SELLER(실제 상품카드 5개+별점)를 히어로 바로 밑으로 */
     /* ※ 상품 섹션 3개 모두 제거(대표 지시 2026-09-08).
        상품이 5개뿐이라 세 섹션이 전부 같은 걸 보여줬다. 메인엔 BEST PICK 3종만 남는다.
        ※ .main_product_category 는 isOui() 판별자다. display:none 이라 DOM엔 남아 있어 판별은 계속 된다.
