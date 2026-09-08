@@ -355,10 +355,11 @@
      현재 라이브 스킨(skin15)에도 .main_image_text_gallery / .main_text 가 있어서
      이것만 보고 판단하면 라이브 메인의 섹션을 숨겨버린다 (2026-09-08 실제 사고).
      .main_product_category(BEST SELLER 4탭)는 오우이에만 있다 — 라이브 0건, 오우이 1건. */
-  function isOui() {
-    return !!document.querySelector('.main_product_category') &&
-           !!document.querySelector('.main_image_text_gallery');
-  }
+  /* 오우이 판별.
+     예전엔 .main_image_text_gallery 도 같이 봤지만, 그 섹션(ON STORE 화장품 3칸)을
+     디자인 편집기에서 끌 예정이라 기준으로 쓸 수 없다.
+     .main_product_category(BEST SELLER)는 유지하는 섹션이고 오우이에만 있다. */
+  function isOui() { return !!document.querySelector('.main_product_category'); }
 
   function hide(sel) {
     var els = document.querySelectorAll(sel);
@@ -447,10 +448,13 @@
 
   /* 중간 띠배너 — 리뷰 신뢰 배너로 */
   function dressTrust() {
-    var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00002"]');
-    if (!host || host.getAttribute('data-z21trust') === '1') return;
-    host.setAttribute('data-z21trust', '1');
-    host.style.display = 'none';
+    if (document.querySelector('.z21-tr')) return;
+    /* 원래는 중간 띠배너 자리에 넣었는데, 그 배너를 편집기에서 끄면 기준점이 사라진다.
+       없으면 BEST SELLER 섹션 뒤에 붙인다. */
+    var host = document.querySelector('[app4you-smart-banner="smart-banner-admin-RES00002"]') ||
+               document.querySelector('.main_product_category');
+    if (!host) return;
+    if (host.getAttribute && host.getAttribute('app4you-smart-banner')) host.style.display = 'none';
 
     var total = 0, photo = 0, pics = [];
     for (var k in RV) { if (RV[k].cnt) { total += RV[k].cnt; photo += (RV[k].photo || 0); } }
