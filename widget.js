@@ -50,7 +50,8 @@
   /* ---------- CSS ---------- */
   var CSS = [
     '.z21-rv{display:inline-flex;align-items:center;gap:5px;vertical-align:middle}',
-    '.z21-stars{position:relative;display:inline-block;font-size:13px;line-height:1;letter-spacing:0;color:#e8e4dd;white-space:nowrap}',
+    /* 회색 바탕별을 없애고 노란 별만 보이게 (대표 요청 2026-09-08) */
+    '.z21-stars{position:relative;display:inline-block;font-size:13px;line-height:1;letter-spacing:0;color:transparent;white-space:nowrap}',
     '.z21-stars::before{content:"\\2605\\2605\\2605\\2605\\2605"}',
     '.z21-stars i{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#f0a500}',
     '.z21-stars i::before{content:"\\2605\\2605\\2605\\2605\\2605"}',
