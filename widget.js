@@ -95,6 +95,21 @@
     '.z21-tr__pics a{display:block;position:relative;padding-top:100%;overflow:hidden;border-radius:8px;background:#efeae3}',
     '.z21-tr__pics img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block}',
 
+    /* 브랜드 스토리 섹션 */
+    '.z21-st{background:#14120f;color:#fff;padding:78px 0}',
+    '.z21-st__in{max-width:1230px;margin:0 auto;padding:0 20px;text-align:center}',
+    '.z21-st__eb{display:block;font-size:12px;letter-spacing:.24em;color:#c8a86b;margin-bottom:16px}',
+    '.z21-st__t{display:block;font-size:34px;font-weight:700;letter-spacing:-.6px;margin-bottom:26px}',
+    '.z21-st__body{max-width:660px;margin:0 auto}',
+    '.z21-st__body p{font-size:15px;line-height:1.85;color:rgba(255,255,255,.76);margin:0 0 12px}',
+    '.z21-st__stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap;margin:38px 0 32px}',
+    '.z21-st__stats div{text-align:center}',
+    '.z21-st__stats b{display:block;font-size:28px;font-weight:700;color:#fff;line-height:1.2}',
+    '.z21-st__stats span{display:block;font-size:12px;color:rgba(255,255,255,.55);margin-top:6px}',
+    '.z21-st__btn{display:inline-block;padding:13px 30px;border:1px solid rgba(255,255,255,.4);',
+    'border-radius:999px;color:#fff;font-size:13px;font-weight:600;text-decoration:none}',
+    '.z21-st__btn:hover{background:#fff;color:#14120f}',
+
     /* 플로팅 문의 버튼 */
     '.z21-fab{position:fixed;right:22px;bottom:22px;z-index:900;display:flex;flex-direction:column;gap:10px}',
     '.z21-fab__b{display:flex;align-items:center;gap:8px;padding:11px 16px;border-radius:999px;',
@@ -129,6 +144,11 @@
     '.z21-tr__head b{font-size:22px}.z21-tr__head span{font-size:12px;width:100%;text-align:center}',
     '.z21-tr .z21-stars.big{font-size:20px}',
     '.z21-tr__pics{grid-template-columns:repeat(5,1fr);gap:6px}',
+    '.z21-st{padding:52px 0}',
+    '.z21-st__t{font-size:25px;margin-bottom:20px}',
+    '.z21-st__body p{font-size:14px;line-height:1.8}',
+    '.z21-st__stats{gap:26px;margin:28px 0 24px}',
+    '.z21-st__stats b{font-size:22px}',
     '.z21-fab{right:12px;bottom:14px;gap:8px}',
     '.z21-fab__b{padding:10px 13px;font-size:12px}',
     '.z21-fab__b svg{width:16px;height:16px}',
@@ -408,6 +428,50 @@
     }
   }
 
+  /* 리치파카 소개(스토리) 섹션 — ONLY!ON 을 뺀 자리에 들어간다.
+     ※ 문장·숫자는 전부 출처가 확인된 것만 쓴다. 근거는 06_리치파카_브랜드조사.md
+        수익 주장(월 1,000만원 등)은 일부러 뺐다 — 문구 브랜드라 "기록해서 바뀐 사람" 축이 제품과 붙는다. */
+  var STORY = {
+    eyebrow: 'BRAND STORY',
+    title: '기록이 사람을 바꿉니다',
+    body: [
+      '월급 275만 원을 받던 직업군인이었습니다. 착실히 모으면 인생이 달라질 줄 알았지만 그렇지 않았습니다.',
+      '전역을 준비하던 마지막 9개월, 새벽에 책을 읽고 읽은 것을 매일 기록했습니다. 그 9개월이 지금의 리치해빗이 됐습니다.',
+      '그래서 우리는 잘 쓰이는 물건이 아니라, 계속 쓰게 되는 물건을 만듭니다.'
+    ],
+    stats: [
+      { n: '8년', l: '새벽 기상 지속' },
+      { n: '138권', l: '9개월간 완독' },
+      { n: '2권', l: '출간한 책' },
+      { n: '28만', l: 'SNS 구독' }
+    ],
+    cta: '리치파카 이야기 더 보기',
+    href: 'https://blog.naver.com/duswn3174'
+  };
+
+  function dressStory() {
+    if (document.querySelector('.z21-st')) return;
+    var anchor = document.querySelector('.main_product_slide') ||
+                 document.querySelector('.main_product_list');
+    if (!anchor) return;
+
+    var box = document.createElement('div');
+    box.className = 'z21-st';
+    var h = '<div class="z21-st__in">' +
+            '<span class="z21-st__eb">' + STORY.eyebrow + '</span>' +
+            '<strong class="z21-st__t">' + STORY.title + '</strong>' +
+            '<div class="z21-st__body">';
+    for (var i = 0; i < STORY.body.length; i++) h += '<p>' + STORY.body[i] + '</p>';
+    h += '</div><div class="z21-st__stats">';
+    for (var j = 0; j < STORY.stats.length; j++) {
+      h += '<div><b>' + STORY.stats[j].n + '</b><span>' + STORY.stats[j].l + '</span></div>';
+    }
+    h += '</div><a class="z21-st__btn" href="' + STORY.href + '" target="_blank" rel="noopener">' +
+         STORY.cta + '</a></div>';
+    box.innerHTML = h;
+    anchor.parentNode.insertBefore(box, anchor);
+  }
+
   /* 플로팅 문의 버튼 — 기존 스킨(skin15)에 있던 카톡·뉴스레터 버튼을 오우이에도.
      원본은 이미지 버튼이었지만 여기선 CSS로 다시 그린다(레티나에서 안 뭉개지고 가볍다). */
   var FLOAT = {
@@ -453,6 +517,7 @@
     dressHero();
     dressPicks();
     dressTrust();
+    dressStory();
     dressFloat();
     fixTabs();
     retitle('.main_product_category', 'BEST SELLER', '가장 많이 팔린 리치해빗 제품');
